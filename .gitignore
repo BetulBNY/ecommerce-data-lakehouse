@@ -3,3 +3,9 @@ map.txt
 tech_stack.txt
 virtual_env.txt
 .env
+dw
+
+data/
+*.csv
+
+notes/

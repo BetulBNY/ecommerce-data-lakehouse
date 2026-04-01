@@ -1,8 +1,21 @@
 import pandas as pd
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
 
-# Postgres bağlantısı
-engine = create_engine('postgresql://admin:password123@localhost:5433/olist_warehouse')
+# read .env file 
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+load_dotenv(dotenv_path)
+
+# Get environment variables
+user = os.getenv("POSTGRES_USER")
+password = os.getenv("POSTGRES_PASSWORD")
+db = os.getenv("POSTGRES_DB")
+host = os.getenv("POSTGRES_HOST")
+port = os.getenv("POSTGRES_PORT")
+
+# Create Engine
+engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 
 #Ingesting CSV files to PostgreSQL
 tables = {

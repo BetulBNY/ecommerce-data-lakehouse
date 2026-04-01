@@ -2,9 +2,7 @@ services:
   postgres:
     image: postgres:15
     container_name: olist_db
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: olist_warehouse
+    env_file:
+      - .env
     ports:
       - "5433:5432"

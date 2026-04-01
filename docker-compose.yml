@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: olist_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: olist_warehouse
+    ports:
+      - "5433:5432"

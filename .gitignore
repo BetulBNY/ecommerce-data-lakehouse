@@ -6,21 +6,17 @@ virtual_env.txt
 .env
 dw
 
-
 # data
 data/
 *.csv
-
 
 # notes & docs
 notes/
 docs/
 
-
 # python cache
 **pycache**/
 *.pyc
-
 
 # temporary (will be reorganized later)
 silver_layer_transform.sql

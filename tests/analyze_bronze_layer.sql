@@ -113,8 +113,73 @@ WHERE customer_city ~ '[0-9]'
 GROUP BY customer_city
 ORDER BY frequency DESC;
 
-
 -- ====================================================================
 -- Checking 'bronze.olist_geolocation'
 -- ====================================================================
 SELECT * FROM bronze.olist_geolocation;
+
+---- Check for NULLs in zip code
+-- Expectation: No Results
+SELECT COUNT(*)
+FROM bronze.olist_geolocation
+WHERE geolocation_zip_code_prefix IS NULL;
+-- No nulls
+
+---- Check for unwanted spaces
+SELECT geolocation_city
+FROM bronze.olist_geolocation
+WHERE geolocation_city != TRIM(geolocation_city);
+-- 1 row has unwanted space
+
+---- Check coordinate boundaries (Outlier values) – analyze values outside Brazil's range
+-- Latitude (Lat): between +5 and -35
+-- Longitude (Lng): between -35 and -74
+-- If there are values far outside this range (e.g., 0,0 or a point in Europe), they are invalid
+SELECT * 
+FROM bronze.olist_geolocation
+WHERE geolocation_lat > 5 OR geolocation_lat < -35
+   OR geolocation_lng > -35 OR geolocation_lng < -74;
+-- 11685 rows found
+
+---- Are the same zip codes assigned to different states or cities?
+SELECT geolocation_zip_code_prefix, COUNT(DISTINCT geolocation_city), COUNT(DISTINCT geolocation_state)
+FROM bronze.olist_geolocation
+GROUP BY 1
+HAVING COUNT(DISTINCT geolocation_city) > 1 OR COUNT(DISTINCT geolocation_state) > 1;
+-- Yes, 8559 rows found
+
+-- ====================================================================
+-- Checking 'bronze.olist_products'
+-- ====================================================================
+SELECT * FROM bronze.olist_products;
+
+---- 1) Check for NULLs or Duplicates in Primary Key
+-- Expectation: No Results
+SELECT 
+    product_id,
+    COUNT(*)
+FROM bronze.olist_products
+GROUP BY product_id 
+HAVING COUNT(*) > 1 OR product_id IS NULL;
+-- No duplicates or nulls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

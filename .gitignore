@@ -1,3 +1,4 @@
+# project files
 docker-commands.txt
 map.txt
 tech_stack.txt
@@ -5,28 +6,23 @@ virtual_env.txt
 .env
 dw
 
+
+# data
 data/
 *.csv
 
-notes/
 
+# notes & docs
+notes/
 docs/
 
-# Python cache
-__pycache__/
+
+# python cache
+**pycache**/
 *.pyc
 
 
-
-
-
-
-
-
-
-
-
-
+# temporary (will be reorganized later)
 silver_layer_transform.sql
 analysis/
 img/

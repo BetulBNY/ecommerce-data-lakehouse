@@ -9,3 +9,24 @@ data/
 *.csv
 
 notes/
+
+docs/
+
+# Python cache
+__pycache__/
+*.pyc
+
+
+
+
+
+
+
+
+
+
+
+
+silver_layer_transform.sql
+analysis/
+img/

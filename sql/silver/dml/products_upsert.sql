@@ -37,6 +37,7 @@ Analysis Results:
 -- STEP 2: ETL / Pipeline – run this query each time (UPSERT)
 INSERT INTO silver.products (
     product_id, 
+	category_id,
 	category_name_en, 
     name_length, 
 	description_length, 
@@ -69,6 +70,7 @@ global_stats AS (
 )
 SELECT 
     p.product_id,
+    t.category_id,
     -- Category Translation Logic (3-level fallback) (Translation -> Cleaned Portuguese -> Uncategorized)
     COALESCE(
        	t.category_name_en, 
@@ -99,6 +101,7 @@ LEFT JOIN category_stats cs ON p.product_category_name = cs.product_category_nam
 
 ON CONFLICT (product_id) 
 DO UPDATE SET 
+    category_id = EXCLUDED.category_id,
     category_name_en = EXCLUDED.category_name_en,
     name_length = EXCLUDED.name_length,
     description_length = EXCLUDED.description_length,

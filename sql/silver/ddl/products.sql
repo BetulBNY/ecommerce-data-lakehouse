@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS silver.products (
 	product_pk INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
 	product_id TEXT UNIQUE NOT NULL, -- Natural Key
 	-- Categorization
+	category_id INT, -- FK
 	category_name_en TEXT ,
 	-- Metadata
 	name_length INT,

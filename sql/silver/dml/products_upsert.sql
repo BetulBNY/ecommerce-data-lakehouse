@@ -48,7 +48,7 @@ INSERT INTO silver.products (
     volume_cm3
 )
 WITH category_stats AS (
-    -- Calculate averages per category using only valid values (> 0)
+    -- Level 1: Calculate averages per category using only valid values (> 0)
     SELECT 
         product_category_name,
 		AVG(CASE WHEN product_weight_g > 0 THEN product_weight_g ELSE NULL END) AS avg_w, -- if product weight is bigger then 0 take it else make it null and continue.
@@ -57,10 +57,19 @@ WITH category_stats AS (
 		AVG(CASE WHEN product_width_cm > 0 THEN product_width_cm ELSE NULL END) AS avg_wi
     FROM bronze.olist_products
     GROUP BY product_category_name 
+),
+global_stats AS (
+ -- Level 2: General average of whole table (If there is no any data in categories)
+ SELECT
+		AVG(CASE WHEN product_weight_g > 0 THEN product_weight_g ELSE NULL END) AS g_avg_w,
+        AVG(CASE WHEN product_length_cm > 0 THEN product_length_cm ELSE NULL END) AS g_avg_l,
+		AVG(CASE WHEN product_height_cm > 0 THEN product_height_cm ELSE NULL END) AS g_avg_h,
+		AVG(CASE WHEN product_width_cm > 0 THEN product_width_cm ELSE NULL END) AS g_avg_wi
+		FROM bronze.olist_products
 )
 SELECT 
     p.product_id,
-    -- Category Translation Logic (3-level fallback)
+    -- Category Translation Logic (3-level fallback) (Translation -> Cleaned Portuguese -> Uncategorized)
     COALESCE(
        	t.category_name_en, 
         INITCAP(REPLACE(p.product_category_name, '_', ' ')), 
@@ -72,18 +81,19 @@ SELECT
     p.product_description_lenght,
     p.product_photos_qty,
 
-    -- Physical Attributes (if 0 → fill with category average)
-    COALESCE(NULLIF(p.product_weight_g, 0), cs.avg_w, 0) AS weight_g,
-    COALESCE(NULLIF(p.product_length_cm, 0), cs.avg_l, 0) AS length_cm,
-    COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, 0) AS height_cm,
-    COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, 0) AS width_cm,
+    -- Physical Attributes (if 0 → fill with category average) (Original -> Categorical Avg -> General Avg -> 0)
+    COALESCE(NULLIF(p.product_weight_g, 0), cs.avg_w, gs.g_avg_w, 0) AS weight_g,
+    COALESCE(NULLIF(p.product_length_cm, 0), cs.avg_l, gs.g_avg_l, 0) AS length_cm,
+    COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, gs.g_avg_h, 0) AS height_cm,
+    COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, gs.g_avg_wi, 0) AS width_cm,
 
     -- Volume Calculation (based on cleaned dimensions)
-    (COALESCE(NULLIF(p.product_length_cm, 0), cs.avg_l, 0) * 
-     COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, 0) * 
-     COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, 0)) AS volume_cm3
+    (COALESCE(NULLIF(p.product_length_cm, 0), cs.avg_l, gs.g_avg_l, 0) * 
+     COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, gs.g_avg_h, 0) * 
+     COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, gs.g_avg_wi, 0)) AS volume_cm3
 
 FROM bronze.olist_products p
+CROSS JOIN global_stats gs -- IT connects general average to all rows
 LEFT JOIN silver.category_translation t ON p.product_category_name = t.category_name_pt
 LEFT JOIN category_stats cs ON p.product_category_name = cs.product_category_name
 

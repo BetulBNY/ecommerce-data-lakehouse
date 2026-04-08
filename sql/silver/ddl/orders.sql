@@ -3,6 +3,8 @@
 -- Purpose: Fact table containing order life cycle, delivery performance, 
 --          and data quality flags.
 -- ====================================================================
+-- DROP TABLE IF EXISTS silver.orders;
+
 -- STEP 1: Create table (persistent)
 CREATE TABLE IF NOT EXISTS silver.orders(
 	-- Primary Keys
@@ -31,12 +33,12 @@ CREATE TABLE IF NOT EXISTS silver.orders(
 );
 
 -- Optimization: Fast lookup for order status and performance
-CREATE INDEX IF NOT EXISTS idx_silver_orders_status ON silver.orders(order_status) WHERE order_status != 'delivered';
+CREATE INDEX IF NOT EXISTS idx_silver_orders_status ON silver.orders(order_status) WHERE order_status != 'Delivered';
 -- delviered haricindekiler için idnex oluştursun çünkü şu anda var olan tabloda zaten 99k veri içinde 96k delivered
 -- bunları indexlemeye gerek yok çünkü tabloyu komple dönmesi daha hızlı olur ekstra index tablosunu da dönmesindense.
 -- Ama geri kalanı indexlesin çünkü sayıları az.
 CREATE INDEX IF NOT EXISTS idx_silver_orders_performance ON silver.orders(delivery_performance) 
-WHERE delivery_performance 'Later';
+WHERE delivery_performance = 'Later';
 -- Çünkü bronze.olist_orders tablosunda 1/10 later geri kalanı 'Earlier'
 
 

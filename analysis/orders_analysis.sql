@@ -80,7 +80,7 @@ FROM  bronze.olist_orders o
 LEFT JOIN silver.customers c
 	ON o.customer_id = c.customer_id
 WHERE c.customer_pk IS NULL;
--- 0 rows. So, every customer is inside silver.customers table
+-- 0 rows. So, every customer is inside silver.customers table(%100 match)
 
 ---- 7) IS there any nulls in date columns? If yes,is it means orders canceled?
 SELECT 

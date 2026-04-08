@@ -61,6 +61,9 @@ SELECT
 		WHEN(order_purchase_timestamp > order_approved_at) THEN FALSE
 		WHEN(order_approved_at > order_delivered_carrier_date) THEN FALSE
 		WHEN(order_delivered_carrier_date > order_delivered_customer_date) THEN FALSE
+		-- NEW RULE: If the status is 'delivered' but there is no date, this is also a chronological error/omission.
+		WHEN o.order_status = 'delivered' AND o.order_delivered_customer_date IS NULL THEN FALSE
+		WHEN o.order_status = 'canceled' AND o.order_delivered_customer_date IS NOT NULL THEN FALSE
 		ELSE TRUE
 	END AS is_valid_chronology
 	

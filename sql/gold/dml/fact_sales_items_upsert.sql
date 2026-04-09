@@ -2,8 +2,10 @@
 -- GOLD LAYER FACT DESIGN: gold.fact_sales_items
 -- ===============================================================================
 -- Notes: 
-	-- gold.fact_sales_items (Granularity: Order-Item Level)
-    -- Purpose: Financial and inventory analysis at the most granular level.
+	-- Grain Level: Each product line within the order. (Granularity: Order-Item Level)
+	-- Purpose: To answer the questions "Which product, in which category, generated how much revenue?"
+    -- Financial and inventory analysis at the most granular level.
+	
     -- Usage: Measuring product-category revenue and seller performance.
 
 	-- Integration with gold.dim_date:

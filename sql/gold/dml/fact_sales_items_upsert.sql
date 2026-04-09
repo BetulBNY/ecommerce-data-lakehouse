@@ -6,6 +6,9 @@
     -- Purpose: Financial and inventory analysis at the most granular level.
     -- Usage: Measuring product-category revenue and seller performance.
 
+	-- Integration with gold.dim_date:
+    -- purchase_timestamp is converted to 'date_key' (INT) for high-speed 
+
 INSERT INTO gold.fact_sales_items (
     order_pk, 
 	order_id, 

@@ -1,13 +1,88 @@
 services:
-  postgres:
+  # 1. My Olist Data Warehouse (PostgreSQL)  
+  olist_db: # Other containers connect to it using this name.
     image: postgres:16
     container_name: olist_db
     env_file:
       - .env
+    environment:
+      # .env dosendaki degiskenleri Postgres imajinin bekledigi isimlere esliyoruz
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5433:5432"
+      - "5433:5432" 
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - olist_warehouse_data:/var/lib/postgresql/data
+    networks:
+      - airflow_network 
 
+  # 2. Airflow Database (For Metadata)
+  postgres_airflow:
+    image: postgres:16
+    container_name: postgres_airflow
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${AIRFLOW_DB_USER}
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD}
+      POSTGRES_DB: ${AIRFLOW_DB_NAME}
+    ports:
+      - "${AIRFLOW_DB_PORT}:5432"
+    volumes:
+      - airflow_metadata_data:/var/lib/postgresql/data  
+    networks:
+      - airflow_network
+
+  # 3. Airflow Webserver (Virtual Interface - Localhost:8080)
+  airflow-webserver:
+    # image: apache/airflow:2.7.1 --> Bunu sildim
+    build: .  # <-- Bulunduğun klasördeki Dockerfile'ı kullanarak imajı kendin yap demek
+    container_name: airflow_webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False # It shuts down the demo DAGs.
+    volumes: # These are not volumes, but bind mounts. They link the local folders to the container folders. 
+      - ./dags:/opt/airflow/dags #./dags my computer's folder, /opt/airflow/dags the container's folder. So, when I change something in my computer's folder, it will be reflected in the container's folder immediately.
+      - ./logs:/opt/airflow/logs # Airflow çalışınca:container → /opt/airflow/logs içine yazıyor. Ben de :./logs klasörünün içinde görüyorum. Yani, container içindeki logs klasörüne yazılan her şey, benim bilgisayarımdaki logs klasöründe de görünüyor. Bu sayede, Airflow'un loglarını kolayca takip edebiliyorum.
+      - ./sql:/opt/airflow/sql
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data
+    depends_on:
+      - postgres_airflow # First, open Airflow DB. Then, open Airflow Webserver.
+    networks:
+      - airflow_network 
+
+  # 4. Airflow Scheduler (Engine that drives the tasks)
+  airflow-scheduler:
+    build: . 
+    container_name: airflow_scheduler
+    command: scheduler
+    env_file:
+      - .env
+    environment:
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./sql:/opt/airflow/sql
+      - ./scripts:/opt/airflow/scripts
+      - ./data:/opt/airflow/data
+    depends_on:
+      - postgres_airflow
+    networks:
+      - airflow_network
+
+# Creating volumes for data persistence
 volumes:
-  pgdata:
+  olist_warehouse_data:
+  airflow_metadata_data:
+
+networks:
+  airflow_network:
+    driver: bridge
+

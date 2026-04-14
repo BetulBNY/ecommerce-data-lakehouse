@@ -2,6 +2,7 @@ from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
+from airflow.providers.common.sql.operators.sql import SQLCheckOperator
 from datetime import datetime, timedelta
 import sys
 import os
@@ -60,7 +61,7 @@ with DAG(
     )
 
     # -------------------------------------------------------------------------
-    # GÖREV 2: SILVER LAYER (SQL) - Tabloları oluştur ve verileri işle
+    # GÖREV 3: SILVER LAYER (SQL) - Tabloları oluştur ve verileri işle
     # -------------------------------------------------------------------------
     with TaskGroup("silver_layer", tooltip="Silver Katmanı İşlemleri") as silver_group:
         for table in SILVER_TABLES:
@@ -77,10 +78,19 @@ with DAG(
                 sql=f'silver/dml/{table}_upsert.sql'
             )
             ddl >> dml # Önce tablo yapısı hazır olsun, sonra veriler dolsun
-        
-
+    
     # -------------------------------------------------------------------------
-    # GÖREV 3: GOLD LAYER (SQL) - Star Schema'yı oluştur
+    # GÖREV 4:  TESTING SILVER LAYER
+    # -------------------------------------------------------------------------
+    with TaskGroup("testing_silver_layer", tooltip="Silver Katmanı Testleri") as silver_testing_group:
+        for table in SILVER_TABLES:
+            test = SQLCheckOperator(
+                task_id=f'test_{table}',
+                postgres_conn_id='olist_warehouse_conn',
+            sql=f'silver/tests/test_{table}.sql' 
+        )
+    # -------------------------------------------------------------------------
+    # GÖREV 5: GOLD LAYER (SQL) - Star Schema'yı oluştur
     # -------------------------------------------------------------------------
     with TaskGroup("gold_layer", tooltip="Gold Katmanı İşlemleri") as gold_group:
         for table in GOLD_TABLES:
@@ -98,8 +108,17 @@ with DAG(
             )
 
             ddl_gold >> dml_gold
+    # -------------------------------------------------------------------------
+    # GÖREV 6:  TESTING GOLD LAYER
+    # -------------------------------------------------------------------------
+    with TaskGroup("testing_gold_layer", tooltip="Gold Katmanı Testleri") as gold_testing_group:
+            test = PostgresOperator(
+                task_id='test_gold_integrity',
+                postgres_conn_id='olist_warehouse_conn',
+                sql=f'gold/tests/test_gold_integrity.sql'
+            )
 
     # -------------------------------------------------------------------------
     # 3. BAĞIMLILIKLAR (Okların Çizilmesi)  # ANA AKIŞ
     # -------------------------------------------------------------------------
-    task_ingest_bronze >> task_create_schemas >> silver_group >> gold_group
+    task_ingest_bronze >> task_create_schemas >> silver_group >> silver_testing_group >> gold_group >>gold_testing_group

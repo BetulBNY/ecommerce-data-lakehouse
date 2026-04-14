@@ -46,6 +46,9 @@ services:
       - .env
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False # It shuts down the demo DAGs.
+        # Aşağıdaki 2 satır: (Docker Compose .env'deki değerleri ezer) Bu sayede; Airflow çalışırken host olarak olist_db'yi, port olarak 5432'yi kullanır. Ben bilgisayarımdan DBeaver ile bağlanırken hala localhost:5433 diyebilirim.
+      - POSTGRES_HOST=olist_db
+      - POSTGRES_PORT=5432
     volumes: # These are not volumes, but bind mounts. They link the local folders to the container folders. 
       - ./dags:/opt/airflow/dags #./dags my computer's folder, /opt/airflow/dags the container's folder. So, when I change something in my computer's folder, it will be reflected in the container's folder immediately.
       - ./logs:/opt/airflow/logs # Airflow çalışınca:container → /opt/airflow/logs içine yazıyor. Ben de :./logs klasörünün içinde görüyorum. Yani, container içindeki logs klasörüne yazılan her şey, benim bilgisayarımdaki logs klasöründe de görünüyor. Bu sayede, Airflow'un loglarını kolayca takip edebiliyorum.
@@ -66,6 +69,9 @@ services:
       - .env
     environment:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+        # Aşağıdaki 2 satır: (Docker Compose .env'deki değerleri ezer)
+      - POSTGRES_HOST=olist_db
+      - POSTGRES_PORT=5432
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs

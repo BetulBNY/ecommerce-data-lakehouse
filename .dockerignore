@@ -1,0 +1,28 @@
+# git
+.git
+.gitignore
+
+# env
+.env
+
+# python cache
+__pycache__/
+*.pyc
+
+# data 
+data/
+*.csv
+
+# docs & notes
+notes/
+docs/
+img/
+
+# project misc
+docker-commands.txt
+map.txt
+tech_stack.txt
+virtual_env.txt
+dw
+silver_layer_transform.sql
+

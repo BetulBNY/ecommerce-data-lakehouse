@@ -4,8 +4,11 @@ import os
 from dotenv import load_dotenv
 
 # read .env file 
+# Docker Compose zaten .env içindeki her şeyi konteynerin içine otomatik yüklediği için Python kodunda load_dotenv kullanmama aslında gerek yok, ama kalması da bir zarar vermez. Ben arada localde de çalıştırdığım için kullanıyorum.
 dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
-load_dotenv(dotenv_path)
+
+if os.path.exists(dotenv_path): # Docker içindeysem load_dotenv'e gerek kalmayabilir ama local için iyidir.
+    load_dotenv(dotenv_path)
 
 # Get environment variables
 user = os.getenv("POSTGRES_USER")
@@ -16,7 +19,7 @@ port = os.getenv("POSTGRES_PORT")
 
 # Create Engine
 def get_engine():
-    return create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
+    return create_engine(f'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}')
 
 
 # tables mapping dictionary

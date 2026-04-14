@@ -7,7 +7,7 @@ from utils import get_engine, tables_mapping
 
 def ingest_bronze():
     """The main function that loads raw CSV data into the Bronze schema"""
-    
+
     print("--- Ingestion started ---")
     engine = get_engine()
 
@@ -16,30 +16,6 @@ def ingest_bronze():
         conn.execute(text("CREATE SCHEMA IF NOT EXISTS bronze"))
 
     # Create Tables:
-    for csv_file, table_name in tables_mapping.items():
-        df = pd.read_csv(f'data/raw/{csv_file}')
-        
-        # Public schema'ya da yüklemek istersen:
-        # df.to_sql(table_name, engine, if_exists='replace', index=False)
-
-        # Bronze schema'ya yükle
-        df.to_sql(table_name, engine, schema='bronze', if_exists='replace', index=False) 
-        print(f"{table_name} loaded successfully into bronze schema!")
-
-
-
-
-
-def ingest_bronze():
-    """The main function that loads raw CSV data into the Bronze schema"""
-    print("--- Ingestion started ---")
-    engine = get_engine()
-
-    # 1. Schema oluşturma
-    with engine.begin() as conn:
-        conn.execute(text("CREATE SCHEMA IF NOT EXISTS bronze"))
-
-    # 2. Döngü ile tabloları yükleme
     for csv_file, table_name in tables_mapping.items():
         # Docker içinde yol /opt/airflow/data/raw/... şeklinde olmalı
         file_path = f'/opt/airflow/data/raw/{csv_file}'
@@ -53,7 +29,7 @@ def ingest_bronze():
     
     print("--- Ingestion completed successfully ---")
 
-# Eğer scripti Airflow dışında manuel çalıştırmak istersen:
+# Scripti Airflow dışında manuel çalıştırmak için:
 if __name__ == "__main__":
     ingest_bronze()
 

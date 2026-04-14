@@ -5,6 +5,9 @@
 # env
 .env
 
+# venv
+venv/
+dw/
 # python cache
 __pycache__/
 *.pyc

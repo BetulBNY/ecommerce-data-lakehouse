@@ -18,6 +18,11 @@ docs/
 **pycache**/
 *.pyc
 
+# logs
+logs/
+*.log
+
 # temporary (will be reorganized later)
 silver_layer_transform.sql
 img/
+

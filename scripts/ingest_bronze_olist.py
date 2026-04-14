@@ -3,7 +3,7 @@
 
 import pandas as pd
 from sqlalchemy import text
-from utils import get_engine, tables_mapping  
+from scripts.utils import get_engine, tables_mapping  #Buraya scripts. yı airflow içinden erişmek için ekledik, localde çalıştırırken de sorun olmaz çünkü aynı dizinde zaten utils.py var. Ama airflow sıkıntı çıkarıyor çünkü her zaman ilk baktığı yer en üst dizin oluyor. 
 
 def ingest_bronze():
     """The main function that loads raw CSV data into the Bronze schema"""

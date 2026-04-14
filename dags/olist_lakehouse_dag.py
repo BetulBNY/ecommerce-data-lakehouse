@@ -38,6 +38,7 @@ with DAG(
     description='Olist E-Ticaret Data Lakehouse ETL Süreci',
     schedule_interval='@daily',          # Her gün çalıştır
     catchup=False,                       # Geçmişteki günleri çalıştırma
+    template_searchpath=['/opt/airflow/sql'],
     tags=['olist', 'lakehouse', 'gold']
 ) as dag:
 
@@ -50,6 +51,15 @@ with DAG(
     )
 
     # -------------------------------------------------------------------------
+    # GÖREV 2: CREATING SCHEMAS (Silver ve Gold şemalarını oluşturur)
+    # -------------------------------------------------------------------------
+    task_create_schemas = PostgresOperator(
+        task_id='create_target_schemas',
+        postgres_conn_id='olist_warehouse_conn',
+        sql='create_schema.sql'
+    )
+
+    # -------------------------------------------------------------------------
     # GÖREV 2: SILVER LAYER (SQL) - Tabloları oluştur ve verileri işle
     # -------------------------------------------------------------------------
     with TaskGroup("silver_layer", tooltip="Silver Katmanı İşlemleri") as silver_group:
@@ -58,13 +68,13 @@ with DAG(
             ddl = PostgresOperator(
                 task_id=f'setup_ddl_{table}',
                 postgres_conn_id='olist_warehouse_conn',
-                sql=f'sql/silver/ddl/{table}.sql' # Her tablo için ayrı DDL dosyası
+                sql=f'silver/ddl/{table}.sql' # Her tablo için ayrı DDL dosyası
             )
         # DML: Upsert İşlemleri (Örnek: Customers)
             dml = PostgresOperator(
                 task_id=f'upsert_dml_{table}',
                 postgres_conn_id='olist_warehouse_conn',
-                sql=f'sql/silver/dml/{table}_upsert.sql'
+                sql=f'silver/dml/{table}_upsert.sql'
             )
             ddl >> dml # Önce tablo yapısı hazır olsun, sonra veriler dolsun
         
@@ -78,13 +88,13 @@ with DAG(
             ddl_gold = PostgresOperator(
                 task_id=f'setup_gold_ddl_{table}',
                 postgres_conn_id='olist_warehouse_conn',
-                sql=f'sql/gold/ddl/{table}.sql'
+                sql=f'gold/ddl/{table}.sql'
             )
 
             dml_gold = PostgresOperator(
                 task_id=f'upsert_gold_dml_{table}',
                 postgres_conn_id='olist_warehouse_conn',
-                sql=f'sql/gold/dml/{table}_upsert.sql'
+                sql=f'gold/dml/{table}_upsert.sql'
             )
 
             ddl_gold >> dml_gold
@@ -92,4 +102,4 @@ with DAG(
     # -------------------------------------------------------------------------
     # 3. BAĞIMLILIKLAR (Okların Çizilmesi)  # ANA AKIŞ
     # -------------------------------------------------------------------------
-    task_ingest_bronze >> silver_group >> gold_group
+    task_ingest_bronze >> task_create_schemas >> silver_group >> gold_group

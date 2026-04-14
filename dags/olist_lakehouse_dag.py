@@ -86,7 +86,7 @@ with DAG(
         for table in SILVER_TABLES:
             test = SQLCheckOperator(
                 task_id=f'test_{table}',
-                postgres_conn_id='olist_warehouse_conn',
+                conn_id='olist_warehouse_conn',
             sql=f'silver/tests/test_{table}.sql' 
         )
     # -------------------------------------------------------------------------

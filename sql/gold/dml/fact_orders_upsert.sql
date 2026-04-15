@@ -56,6 +56,9 @@ LEFT JOIN silver.order_reviews r ON o.order_id = r.order_id
 
 ON CONFLICT (order_pk) DO UPDATE SET
     total_order_value = EXCLUDED.total_order_value,
+    total_freight_value = EXCLUDED.total_freight_value,
     review_score = EXCLUDED.review_score,
+    is_late = EXCLUDED.is_late,
     order_status = EXCLUDED.order_status,
+    delivery_date_key = EXCLUDED.delivery_date_key,
     updated_at = CURRENT_TIMESTAMP;

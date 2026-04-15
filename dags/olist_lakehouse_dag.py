@@ -112,9 +112,9 @@ with DAG(
     # GÖREV 6:  TESTING GOLD LAYER
     # -------------------------------------------------------------------------
     with TaskGroup("testing_gold_layer", tooltip="Gold Katmanı Testleri") as gold_testing_group:
-            test = PostgresOperator(
+            test = SQLCheckOperator(
                 task_id='test_gold_integrity',
-                postgres_conn_id='olist_warehouse_conn',
+                conn_id='olist_warehouse_conn',
                 sql=f'gold/tests/test_gold_integrity.sql'
             )
 

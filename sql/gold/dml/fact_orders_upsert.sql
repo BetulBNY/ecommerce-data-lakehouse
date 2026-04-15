@@ -47,7 +47,7 @@ SELECT
     COALESCE(i.total_freight, 0) AS total_freight_value,
     r.review_score,
     o.delivery_time_days,
-    CASE WHEN o.delivery_performance = 'Late' THEN TRUE ELSE FALSE END AS is_late,
+    CASE WHEN o.delivery_performance = 'Later' THEN TRUE ELSE FALSE END AS is_late,
     o.order_status
 FROM silver.orders o
 LEFT JOIN payment_summary p ON o.order_id = p.order_id

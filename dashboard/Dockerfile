@@ -1,15 +1,15 @@
 # Hafif bir Python image
 FROM python:3.9-slim
 
-# Çalışma klasörüm
-WORKDIR /app
+# Çalışma klasörüm. Container içinde bundan sonraki tüm işlemleri bu klasörde yap.
+WORKDIR /myapp
 
 # Gereklilikleri kopyalama ve yükleme
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Kalan tüm dashboard dosyalarını kopyala
-COPY . .
+#COPY . .
 
 # Streamlit'in standart portu
 EXPOSE 8501

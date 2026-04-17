@@ -33,12 +33,13 @@ col1, col2, col3 = st.columns(3)
 
 # View Sales Performance'dan özet veriler çekme
 df_sales = pd.read_sql("SELECT * FROM gold.view_sales_performance", engine)
-latest_revenue = df_sales['total_revenue'].iloc[-1]
-total_orders = df_sales['total_orders'].sum()
+# latest_revenue = df_sales['total_revenue'].iloc[-1] # Son ayın geliri düşük çünkü 1 satış var. Eylül 2018 verisi bozuk olduğu için, "Son Ay" yerine "Total Revenue" (Tüm Zamanlar Cirosu) göstermek daha sağlıklı
+total_revenue = df_sales['total_revenue'].sum()
+total_orders = df_sales['total_orders'].sum() #Doğru
 avg_growth = df_sales['revenue_growth_pct'].mean()
 
 col1.metric("Total Orders", f"{total_orders:,}")
-col2.metric("Latest Month Revenue", f"${latest_revenue:,.2f}")
+col2.metric("Total Revenue", f"${total_revenue:,.2f}")
 col3.metric("Avg. Monthly Growth", f"{avg_growth:.2f}%")
 
 st.markdown("---")

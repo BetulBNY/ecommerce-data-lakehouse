@@ -7,8 +7,10 @@ def export_to_csv():
     engine = get_engine()
     output_dir = "/opt/airflow/dashboard/data"
     
+# KLASÖRÜ ZORLA OLUŞTUR:
     if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+        print(f"Creating directory: {output_dir}")
+        os.makedirs(output_dir, exist_ok=True)
 
     # 1. Export edilecek View'lar ve dosya isimleri
     views = {
@@ -21,6 +23,8 @@ def export_to_csv():
         print(f"Exporting {view} to {filename}...")
         df = pd.read_sql(f"SELECT * FROM {view}", engine)
         df.to_csv(f"{output_dir}/{filename}", index=False)
+
+    print(f"Files in {output_dir}: {os.listdir(output_dir)}")
 
     # 2. Özel Metrikleri Kaydet (Gauge ve Avg Delivery için)
     # Bunlar tek bir satırlık veriler olduğu için hepsini bir 'summary.csv' dosyasında toplayabiliriz
@@ -36,7 +40,7 @@ def export_to_csv():
         FROM gold.dim_customers 
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL 
         ORDER BY RANDOM()  
-        LIMIT 10000
+        LIMIT 10001
     """
     df_map = pd.read_sql(map_query, engine)
     df_map.to_csv(f"{output_dir}/dim_customers_sample.csv", index=False)

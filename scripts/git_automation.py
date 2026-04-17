@@ -1,23 +1,52 @@
 import subprocess
 import os
+import shutil
 
 def git_push_data():
-    """
-    Git automation function to push exported CSVs to GitHub.
-    This ensures the Streamlit dashboard stays updated automatically.
-    """
     try:
-        os.chdir("/opt/airflow") # 1. Docker içindeki root klasörüne git
-        subprocess.run(["git", "config", "--global", "user.email", "your_email@example.com"], check=True) # 2. Git kimlik bilgilerini ayarla (Her seferinde yapmak güvenlidir)
-        subprocess.run(["git", "config", "--global", "user.name", "Airflow Auto-Bot"], check=True)
-        subprocess.run(["git", "add", "dashboard/data/*.csv"], check=True) # 3. Değişiklikleri tara ve ekle
-        subprocess.run("git commit -m 'Auto-update gold data via Airflow' || true", shell=True, check=True) # 4. Commit oluştur (Hata almamak için değişiklik olup olmadığını kontrol ederiz) 'git commit' eğer değişen bir şey yoksa hata verir, bunu '|| true' ile geçebiliriz
-        subprocess.run(["git", "push", "origin", "main"], check=True) # 5. GitHub'a Gönder # Burada 'origin main' ana branch ismi olmalı.
-        print("--- GIT UPDATE SUCCESSFUL ---")
+        git_email = os.getenv("GIT_EMAIL")
+        git_user = os.getenv("GIT_USER_NAME")
+        git_token = os.getenv("GITHUB_TOKEN")
+        git_repo = os.getenv("GITHUB_REPO") 
 
-    except subprocess.CalledProcessError as e:
-        print(f"--- GIT ERROR: Process failed with return code {e.returncode} ---")
-        raise e # raise Airflow’un task’ı FAIL görmesini sağlar
+        # 1. Havada bir klasör açalım (Konteynerin hafızası)
+        temp_dir = "/tmp/air_sync"
+        if os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
+        
+        # 2. Reponu internetten buraya CLONE et (Geçmişinle birlikte gelir)
+        remote_url = f"https://{git_token}@{git_repo}"
+        print("Fetching repo from GitHub...")
+        subprocess.run(["git", "clone", "--depth", "1", remote_url, temp_dir], check=True)
+
+        # 3. Airflow'un az önce ürettiği CSV'leri bul (Konteyner içindeki adresten)
+        # Senin COPY ile oluşturduğun değil, az önce Python'ın yazdığı yer:
+        source_csv_path = "/opt/airflow/dashboard/data/"
+        target_csv_path = os.path.join(temp_dir, "dashboard/data/")
+        
+        os.makedirs(target_csv_path, exist_ok=True)
+        
+        print("Moving newly generated data to sync folder...")
+        for file in os.listdir(source_csv_path):
+            if file.endswith(".csv"):
+                shutil.copy(os.path.join(source_csv_path, file), target_csv_path)
+
+        # 4. Git İşlemleri
+        os.chdir(temp_dir)
+        subprocess.run(["git", "config", "user.email", git_email], check=True)
+        subprocess.run(["git", "config", "user.name", git_user], check=True)
+        subprocess.run(["git", "add", "."], check=True)
+        
+        # Değişiklik var mı?
+        status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
+        if status:
+            print("Updates found! Pushing to GitHub...")
+            subprocess.run(["git", "commit", "-m", "Auto-update dashboard data [Airflow]"], check=True)
+            subprocess.run(["git", "push", "origin", "main"], check=True)
+            print("--- PUSH SUCCESSFUL ---")
+        else:
+            print("No new data to push.")
+
     except Exception as e:
-        print(f"--- GENERAL ERROR: {e} ---")
+        print(f"FAILED: {e}")
         raise e

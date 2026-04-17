@@ -13,11 +13,6 @@ user = os.getenv("DB_USER")
 password = os.getenv("DB_PASSWORD")
 
 def get_connection():
-    # Docker içinden bağlandığım için hostu 'olist_db' yaptım ancak localden test ettiğimde localhost yazmak gerekiyor. 
-    return create_engine(f"postgresql://{user}:{password}@olist_db:5433/olist_warehouse")
-
-
-def get_connection():
     # Docker ortamındaysa ortam değişkenini al, yoksa local ayarı kullan
     host = os.getenv("POSTGRES_HOST", "localhost")
     port = os.getenv("POSTGRES_PORT", "5433") # Local için 5433, Docker içi için 5432
@@ -26,7 +21,6 @@ def get_connection():
     db = os.getenv("POSTGRES_DB")
     
     return create_engine(f"postgresql://{user}:{password}@{host}:{port}/{db}")
-
 
 engine = get_connection()
 

@@ -29,7 +29,6 @@ default_args = {
     'retry_delay': timedelta(minutes=5), # Tekrar denemek için 5 dk bekle
 }
 
-
 # -------------------------------------------------------------------------
 # 2. DAG TANIMI (Orkestra Başlıyor)
 # -------------------------------------------------------------------------

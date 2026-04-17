@@ -96,8 +96,8 @@ services:
       # Dashboard'un veritabanına ulaşması için host 'olist_db' olmalı
       - POSTGRES_HOST=olist_db
       - POSTGRES_PORT=5432
-    volumes:
-      - ./dashboard:/myapp  # Dashboard klasöründeki tüm dosyaları container'ın /app klasörüne bağla
+    #volumes:
+    #  - ./dashboard:/myapp  # Dashboard klasöründeki tüm dosyaları container'ın /app klasörüne bağla
     depends_on:
       - olist_db # Dashboard, Olist Data Warehouse'a bağlanarak verileri çekeceği için önce olist_db'nin ayağa kalkması gerekiyor.
     networks:

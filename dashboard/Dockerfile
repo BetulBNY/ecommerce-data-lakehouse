@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Kalan tüm dashboard dosyalarını kopyala
-#COPY . .
+COPY . .
 
 # Streamlit'in standart portu
 EXPOSE 8501

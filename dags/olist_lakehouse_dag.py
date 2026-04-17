@@ -118,65 +118,22 @@ with DAG(
                 conn_id='olist_warehouse_conn',
                 sql=f'gold/tests/test_gold_integrity.sql'
             )
-
-
-
-
-
-
-
-
-
-
-
-# Git Push fonksiyonu
-def git_push_data():
-    try:
-        # Docker içindeki çalışma dizinine git
-        os.chdir("/opt/airflow")
-        # Git komutlarını sırayla çalıştır
-        subprocess.run(["git", "config", "--global", "user.email", "admin@example.com"], check=True)
-        subprocess.run(["git", "config", "--global", "user.name", "Airflow Bot"], check=True)
-        subprocess.run(["git", "add", "dashboard/data/*.csv"], check=True)
-        subprocess.run(["git", "commit", "-m", "Auto-update gold data via Airflow"], check=True)
-        subprocess.run(["git", "push", "origin", "main"], check=True) # Branch adın farklıysa düzelt
-        print("Data pushed to GitHub successfully!")
-    except Exception as e:
-        print(f"Git push failed: {e}")
-
-# ... DAG tanımı içinde ...
-
-task_export_csv = PythonOperator(
-    task_id='export_gold_to_csv',
-    python_callable=export_to_csv
-)
-
-task_git_push = PythonOperator(
-    task_id='git_push_to_github',
-    python_callable=git_push_data
-)
-
-# OKLARI BAĞLA (En sona ekle)
-gold_testing_group >> task_export_csv >> task_git_push
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # -------------------------------------------------------------------------
+    # GÖREV 7: EXPORT GOLD DATA TO CSV (Python) - Dashboard için gerekli verileri CSV'ye yazdır
+    # -------------------------------------------------------------------------
+    task_export_csv = PythonOperator(
+        task_id='export_gold_to_csv',
+        python_callable=export_to_csv
+    )
+    # -------------------------------------------------------------------------
+    # GÖREV 8: GIT PUSH TO GITHUB (Python) - Değişiklikleri GitHub'a gönder
+    # -------------------------------------------------------------------------
+    task_git_push = PythonOperator(
+        task_id='git_push_to_github',
+        python_callable=git_push_data
+    )
 
     # -------------------------------------------------------------------------
     # 3. BAĞIMLILIKLAR (Okların Çizilmesi)  # ANA AKIŞ
     # -------------------------------------------------------------------------
-    task_ingest_bronze >> task_create_schemas >> silver_group >> silver_testing_group >> gold_group >>gold_testing_group
+    task_ingest_bronze >> task_create_schemas >> silver_group >> silver_testing_group >> gold_group >>gold_testing_group >> task_export_csv >> task_git_push

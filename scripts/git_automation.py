@@ -14,10 +14,10 @@ def git_push_data():
         subprocess.run("git commit -m 'Auto-update gold data via Airflow' || true", shell=True, check=True) # 4. Commit oluştur (Hata almamak için değişiklik olup olmadığını kontrol ederiz) 'git commit' eğer değişen bir şey yoksa hata verir, bunu '|| true' ile geçebiliriz
         subprocess.run(["git", "push", "origin", "main"], check=True) # 5. GitHub'a Gönder # Burada 'origin main' ana branch ismi olmalı.
         print("--- GIT UPDATE SUCCESSFUL ---")
-        
+
     except subprocess.CalledProcessError as e:
         print(f"--- GIT ERROR: Process failed with return code {e.returncode} ---")
-        raise e # Airflow'un hatayı görmesi için hatayı fırlatıyoruz
+        raise e # raise Airflow’un task’ı FAIL görmesini sağlar
     except Exception as e:
         print(f"--- GENERAL ERROR: {e} ---")
         raise e

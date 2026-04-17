@@ -3,6 +3,7 @@
 
 # Use the official Airflow image as the base and Adding Git to the image
 FROM apache/airflow:2.7.1
+WORKDIR /opt/airflow
 USER root
 RUN apt-get update && apt-get install -y git && apt-get clean
 USER airflow

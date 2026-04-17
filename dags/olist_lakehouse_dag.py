@@ -13,6 +13,8 @@ import os
 # Docker içinde scripts klasörüne ulaşabilmek için yolu sisteme ekliyoruz
 sys.path.append('/opt/airflow')
 from scripts.ingest_bronze_olist import ingest_bronze
+from scripts.export_gold_to_csv import export_to_csv
+from scripts.git_automation import git_push_data
 
 # Silver Tablo Listesi (Dosya isimlerinle aynı olmalı)
 SILVER_TABLES = ['customer', 'geolocation', 'products', 'sellers', 'order_items', 'order_payments', 'order_reviews', 'orders', 'category_translation']
@@ -116,6 +118,63 @@ with DAG(
                 conn_id='olist_warehouse_conn',
                 sql=f'gold/tests/test_gold_integrity.sql'
             )
+
+
+
+
+
+
+
+
+
+
+
+# Git Push fonksiyonu
+def git_push_data():
+    try:
+        # Docker içindeki çalışma dizinine git
+        os.chdir("/opt/airflow")
+        # Git komutlarını sırayla çalıştır
+        subprocess.run(["git", "config", "--global", "user.email", "admin@example.com"], check=True)
+        subprocess.run(["git", "config", "--global", "user.name", "Airflow Bot"], check=True)
+        subprocess.run(["git", "add", "dashboard/data/*.csv"], check=True)
+        subprocess.run(["git", "commit", "-m", "Auto-update gold data via Airflow"], check=True)
+        subprocess.run(["git", "push", "origin", "main"], check=True) # Branch adın farklıysa düzelt
+        print("Data pushed to GitHub successfully!")
+    except Exception as e:
+        print(f"Git push failed: {e}")
+
+# ... DAG tanımı içinde ...
+
+task_export_csv = PythonOperator(
+    task_id='export_gold_to_csv',
+    python_callable=export_to_csv
+)
+
+task_git_push = PythonOperator(
+    task_id='git_push_to_github',
+    python_callable=git_push_data
+)
+
+# OKLARI BAĞLA (En sona ekle)
+gold_testing_group >> task_export_csv >> task_git_push
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # -------------------------------------------------------------------------
     # 3. BAĞIMLILIKLAR (Okların Çizilmesi)  # ANA AKIŞ

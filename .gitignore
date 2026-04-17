@@ -7,7 +7,11 @@ virtual_env.txt
 dw
 
 # data
-data/
+# Root'taki devasa ham verileri engellemeye devam et
+/data/
+
+# Dashboard'un içindeki küçük CSV'lere izin ver (Baştaki ! işareti "istisna" demektir)
+!dashboard/data/
 *.csv
 
 # notes & docs

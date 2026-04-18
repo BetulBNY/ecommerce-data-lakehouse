@@ -32,19 +32,46 @@ st.markdown("---")
 st.subheader("Key Performance Indicators")
 col1, col2, col3, col4, col5 = st.columns(5)
 
-# Fetching summary data from Sales, Logistics Performance and Category Insights
-df_sales = pd.read_sql("SELECT * FROM gold.view_sales_performance", engine)
-df_logistics = pd.read_sql("SELECT * FROM gold.view_logistics_performance LIMIT 10", engine)
-df_cat = pd.read_sql("SELECT * FROM gold.view_category_insights", engine)
-df_review = pd.read_sql("SELECT AVG(review_score) as avg_score FROM gold.fact_orders", engine)
-df_delivery = pd.read_sql("SELECT AVG(delivery_time_days) as avg_delivery FROM gold.fact_orders WHERE order_status = 'Delivered'", engine)
+# --- Data Reading Section ---
+# If we are running locally, read from the database. If we are in the cloud (where the dashboard will be deployed), read from the CSV files that Airflow exports. 
+def load_data(query, filename):
+    csv_path = f"dashboard/data/{filename}"
+
+    if not os.path.exists(csv_path):
+        csv_path = f"data/{filename}" # Docker veya Streamlit Cloud için
+    
+    if os.path.exists(csv_path):
+        return pd.read_csv(csv_path)
+    return pd.read_sql(query, engine)
+
+df_sales = load_data("SELECT * FROM gold.view_sales_performance", "view_sales_performance.csv")
+df_logistics = load_data("SELECT * FROM gold.view_logistics_performance LIMIT 10", "view_logistics_performance.csv")
+df_cat = load_data("SELECT * FROM gold.view_category_insights", "view_category_insights.csv")
+
+# For Summary Metrics:
+# Potansiyel yolları bir listede topladım.
+summary_paths = ["dashboard/data/summary_metrics.csv", "data/summary_metrics.csv"]
+summary_file = next((p for p in summary_paths if os.path.exists(p)), None)
+summary_file = None
+for p in summary_paths:
+    if os.path.exists(p):
+        summary_file = p
+        break
+
+if summary_file:
+    # Eğer dosyalardan biri bulunduysa oradan oku
+    df_summary = pd.read_csv(summary_file)
+    avg_review_score = float(df_summary['avg_review_score'].iloc[0])
+    avg_delivery = float(df_summary['avg_delivery_days'].iloc[0])
+else:
+    # Hiçbir dosya bulunamadıysa (yani localdeysem ve CSV üretmediysem) DB'ye git
+    avg_review_score = float(pd.read_sql("SELECT AVG(review_score) as val FROM gold.fact_orders", engine).iloc[0,0])
+    avg_delivery = float(pd.read_sql("SELECT AVG(delivery_time_days) as val FROM gold.fact_orders WHERE order_status = 'Delivered'", engine).iloc[0,0])
 
 # latest_revenue = df_sales['total_revenue'].iloc[-1] # Monthly revenue is low because there is only 1 sale. Since September 2018 data is corrupted, showing "Total Revenue" is more reliable than "Last Month"
 total_revenue = df_sales['total_revenue'].sum()
 total_orders = df_sales['total_orders'].sum() #Correct
 clean_growth = df_sales[df_sales['revenue_growth_pct'] < 500]['revenue_growth_pct'].mean() #Correct
-avg_review_score = float(df_review['avg_score'].iloc[0])
-avg_delivery = float(df_delivery['avg_delivery'].iloc[0])
 
 col1.metric("Total Orders", f"{total_orders:,}")
 col2.metric("Total Revenue", f"${total_revenue:,.2f}")
@@ -128,13 +155,21 @@ st.dataframe(df_cat, use_container_width=True)
 # 5. Map Visualization
 st.subheader("Customer Distribution Map")
 # Fetch only customers with valid coordinates (NOT NULL)
-df_map = pd.read_sql("""
-    SELECT latitude, longitude 
-    FROM gold.dim_customers 
-    WHERE latitude IS NOT NULL AND longitude IS NOT NULL 
-    ORDER BY RANDOM()  
-    LIMIT 10000
-""", engine)
+map_paths = ["dashboard/data/dim_customers_sample.csv", "data/dim_customers_sample.csv"]
+map_file = None
+for p in map_paths:
+    if os.path.exists(p):
+        map_file = p
+        break
+
+if map_file:
+    df_map = pd.read_csv(map_file)
+else:    
+    df_map = pd.read_sql("""
+        SELECT latitude, longitude FROM gold.dim_customers 
+        WHERE latitude IS NOT NULL AND longitude IS NOT NULL 
+        ORDER BY RANDOM() LIMIT 10000
+    """, engine)
 
 # Random sampling used for a more balanced distribution since full dataset is too large
 st.map(df_map)

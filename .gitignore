@@ -30,3 +30,9 @@ logs/
 silver_layer_transform.sql
 img/
 
+# Airflow System Files
+airflow.cfg
+webserver_config.py
+unittests.cfg
+*.pid
+*.db

@@ -38,7 +38,7 @@ def load_data(query, filename):
     csv_path = f"dashboard/data/{filename}"
 
     if not os.path.exists(csv_path):
-        csv_path = f"data/{filename}" # Docker veya Streamlit Cloud için
+        csv_path = f"data/{filename}" # Docker veya Streamlit Cloud için # It's the gateway that allows Streamlit on the internet to access the data folder in my GitHub repository.
     
     if os.path.exists(csv_path):
         return pd.read_csv(csv_path)

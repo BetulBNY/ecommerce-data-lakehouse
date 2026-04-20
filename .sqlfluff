@@ -1,0 +1,17 @@
+[sqlfluff]
+dialect = postgres
+# I am completely disabling some of the strict rules.
+# Some 
+exclude_rules = layout.end_of_file, references.keywords
+
+[sqlfluff:indentation]
+tab_width = 4
+indent_unit = space
+
+[sqlfluff:rules:layout.spacing]
+# Allow (multiple) spaces for aligning columns.
+allow_multispace_alignment = true
+
+[sqlfluff:rules:layout.long_lines]
+# Increase the line length limit from 80 to 120.
+max_line_length = 120

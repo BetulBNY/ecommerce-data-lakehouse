@@ -37,6 +37,6 @@ SELECT
 FROM (
     -- I am creating a list that includes all the days from 2015 to 2020.
     SELECT '2015-01-01'::DATE + sequence.day AS datum
-    FROM generate_series(0, 5478) AS sequence(day) -- 365 * 15 day approximately
+    FROM GENERATE_SERIES(0, 5478) AS sequence(day) -- 365 * 15 day approximately
 ) AS calendar
 ON CONFLICT (date_id) DO NOTHING;

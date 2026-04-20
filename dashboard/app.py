@@ -86,7 +86,6 @@ left_column, right_column = st.columns(2)
 
 with left_column:
     st.subheader("Monthly Revenue Trend")
-     # VERİYİ SIRALAMAYI UNUTMA (Bu çok kritik!)
     df_sales = df_sales.sort_values(['year', 'month']) # VERİYİ SIRALAMA
     # Created a new column by combining year and month (e.g. "2017-January")
     df_sales['year_month'] = df_sales['year'].astype(str) + "-" + df_sales['month_name']

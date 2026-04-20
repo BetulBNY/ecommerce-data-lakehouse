@@ -47,6 +47,5 @@ jobs:
         
       - name: Lint SQL Files
         run: |
-          # Sadece 'sql/' klasöründeki dosyaları denetle
-          # Postgres kural setine göre bakar
-          sqlfluff lint sql/ --dialect postgres
+          # It will now automatically retrieve settings from the .sqlfluff file in the project's root directory.
+          sqlfluff lint sql/

@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS gold.dim_customers (
     zip_code INT,
     latitude FLOAT,
     longitude FLOAT,
-	-- Audit Columns: I added these two date columns to track when data flowed from Silver to Gold.
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	-- Audit Columns: I added these two date columns 
+	-- to track when data flowed from Silver to Gold.
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

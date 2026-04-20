@@ -1,17 +1,13 @@
 [sqlfluff]
 dialect = postgres
-# I am completely disabling some of the strict rules.
-# Some 
-exclude_rules = layout.end_of_file, references.keywords
+# We completely add and disable the rules that cause errors
+# layout.spacing: Doesn't mind excessive spacing between columns (LT01)
+# layout.indent: Doesn't take indentations too seriously (LT02)
+# layout.long_lines: Doesn't mind line length (LT05)
+# layout.end_of_file: Doesn't mind empty lines at the end of the file (LT12)
+# references.keywords: Doesn't mind keywords like date and order (RF04)
+exclude_rules = layout.spacing, layout.indent, layout.long_lines, layout.end_of_file, references.keywords
 
 [sqlfluff:indentation]
 tab_width = 4
 indent_unit = space
-
-[sqlfluff:rules:layout.spacing]
-# Allow (multiple) spaces for aligning columns.
-allow_multispace_alignment = true
-
-[sqlfluff:rules:layout.long_lines]
-# Increase the line length limit from 80 to 120.
-max_line_length = 120

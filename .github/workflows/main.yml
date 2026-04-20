@@ -10,6 +10,7 @@ on:
       - 'scripts/**'
       - 'dashboard/*.py'
       - '.github/workflows/**'
+      - '.sqlfluff' 
   pull_request:
     branches: [ "main" ] # when someone submits a pull request
 

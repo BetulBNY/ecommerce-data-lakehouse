@@ -9,7 +9,9 @@
     -- Usage: Measuring product-category revenue and seller performance.
 
 	-- Integration with gold.dim_date:
-    -- purchase_timestamp is converted to 'date_key' (INT) for high-speed 
+    -- purchase_timestamp is converted to 'date_key' (INT) for high-speed
+ 
+TRUNCATE TABLE gold.fact_sales_items;
 
 INSERT INTO gold.fact_sales_items (
     order_pk, 

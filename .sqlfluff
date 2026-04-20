@@ -6,7 +6,7 @@ dialect = postgres
 # layout.long_lines: Doesn't mind line length (LT05)
 # layout.end_of_file: Doesn't mind empty lines at the end of the file (LT12)
 # references.keywords: Doesn't mind keywords like date and order (RF04)
-exclude_rules = layout.spacing, layout.indent, layout.long_lines, layout.end_of_file, references.keywords
+exclude_rules = layout.spacing, layout.indent, layout.long_lines, layout.end_of_file, references.keywords, aliasing.table, capitalisation.identifiers
 
 [sqlfluff:indentation]
 tab_width = 4

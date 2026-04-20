@@ -36,13 +36,13 @@ SELECT
     c.zip_code_prefix,
     g.latitude,
     g.longitude
-FROM silver.customers c
-LEFT JOIN silver.geolocation g ON c.zip_code_prefix = g.zip_code
+FROM silver.customers AS c
+LEFT JOIN silver.geolocation AS g ON c.zip_code_prefix = g.zip_code
 ON CONFLICT (customer_pk) 
 DO UPDATE SET 
-    city = EXCLUDED.city,
-    state = EXCLUDED.state,
-    zip_code = EXCLUDED.zip_code,
-    latitude = EXCLUDED.latitude,
-    longitude = EXCLUDED.longitude,
+    city = excluded.city,
+    state = excluded.state,
+    zip_code = excluded.zip_code,
+    latitude = excluded.latitude,
+    longitude = excluded.longitude,
     updated_at = CURRENT_TIMESTAMP;

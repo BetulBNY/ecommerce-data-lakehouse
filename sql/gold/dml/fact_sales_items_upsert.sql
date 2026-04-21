@@ -35,4 +35,4 @@ SELECT
     oi.freight_value,
     oi.total_value AS total_item_value
 FROM silver.order_items oi
-JOIN silver.orders o ON oi.order_id = o.order_id;
+INNER JOIN silver.orders o ON oi.order_id = o.order_id;

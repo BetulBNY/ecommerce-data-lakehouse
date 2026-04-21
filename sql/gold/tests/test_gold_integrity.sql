@@ -26,8 +26,8 @@ WITH gold_test_summary AS (
         -- Checks if the total revenue in Silver matches Gold within a small tolerance.
         (SELECT COUNT(*) FROM (
             SELECT 
-                ABS((SELECT SUM(payment_value) FROM silver.order_payments) - 
-                    (SELECT SUM(total_order_value) FROM gold.fact_orders)) as revenue_diff
+                ABS((SELECT SUM(payment_value) FROM silver.order_payments) 
+                    - (SELECT SUM(total_order_value) FROM gold.fact_orders)) as revenue_diff
         ) r WHERE revenue_diff > 1.0) AS count_revenue_mismatch,
 
         -- TEST 3: Referential Integrity (Symmetry check)

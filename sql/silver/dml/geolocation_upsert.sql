@@ -50,7 +50,7 @@ SELECT
 	c.city,
 	c.state
 FROM lat_lng_avg l
-JOIN city_voting c ON l.zip_code = c.zip_code
+INNER JOIN city_voting c ON l.zip_code = c.zip_code
 WHERE c.rank = 1
 ON CONFLICT (zip_code) 
 DO UPDATE SET 

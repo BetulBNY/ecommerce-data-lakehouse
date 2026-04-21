@@ -30,12 +30,12 @@ Hypothetical Product-Level Reviews:
 */
 INSERT INTO silver.order_reviews (
     review_id, 
-	order_id, 
-	review_score, 
+    order_id, 
+    review_score, 
     review_comment_title, 
-	review_comment_message, 
+    review_comment_message, 
     review_creation_date, 
-	review_answer_timestamp
+    review_answer_timestamp
 )
 -- SCD 1
 WITH ranked_reviews AS (  
@@ -43,7 +43,7 @@ WITH ranked_reviews AS (
         *,
         ROW_NUMBER() OVER(PARTITION BY order_id ORDER BY review_answer_timestamp DESC,
 		review_creation_date DESC -- Sort and number the reviews for each order_id. But its main purpose is select the most recent record (deduplication)
-        ) as rn
+        ) AS rn
     FROM bronze.olist_order_reviews
 )
 -- SELECT* FROM ranked_reviews WHERE rn>1
@@ -51,10 +51,10 @@ SELECT
     review_id,
     order_id,
     review_score,
-    INITCAP(TRIM(review_comment_title)),
-    TRIM(review_comment_message),
-    review_creation_date::timestamp,
-    review_answer_timestamp::timestamp
+    INITCAP(TRIM(review_comment_title)) AS review_comment_title, ,
+    TRIM(review_comment_message) AS review_comment_message, ,
+    review_creation_date::timestamp AS review_creation_date::timestamp ,
+    review_answer_timestamp::timestamp AS review_answer_timestamp 
 FROM ranked_reviews
 WHERE rn = 1 -- Just get latest one
 ON CONFLICT (order_id) 

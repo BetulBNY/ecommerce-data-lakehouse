@@ -44,7 +44,7 @@ SELECT
     v.cleaned_city,
     v.cleaned_state
 FROM base_cleaned b
-JOIN voting_logic v ON b.customer_zip_code_prefix = v.customer_zip_code_prefix
+INNER JOIN voting_logic v ON b.customer_zip_code_prefix = v.customer_zip_code_prefix
 WHERE v.rank = 1
 ON CONFLICT (customer_id) 
 DO UPDATE SET 

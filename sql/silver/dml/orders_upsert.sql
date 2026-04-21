@@ -36,39 +36,39 @@ SELECT
     o.customer_id,
     c.customer_pk,
     INITCAP(o.order_status) AS order_status,
-    o.order_purchase_timestamp::timestamp,
-    o.order_approved_at::timestamp,
-    o.order_delivered_carrier_date::timestamp,
-    o.order_delivered_customer_date::timestamp,
-    o.order_estimated_delivery_date::timestamp,
+    o.order_purchase_timestamp::timestamp AS order_purchase_timestamp,
+    o.order_approved_at::timestamp AS order_approved_at,
+    o.order_delivered_carrier_date::timestamp AS order_delivered_carrier_date,
+    o.order_delivered_customer_date::timestamp AS order_delivered_customer_date,
+    o.order_estimated_delivery_date::timestamp AS order_estimated_delivery_date,
 
 	-- Actual delivery times (days)
-	EXTRACT(DAY FROM (order_delivered_customer_date::timestamp - order_purchase_timestamp::timestamp)) AS delivery_time_days,
+	EXTRACT(DAY FROM (o.order_delivered_customer_date::timestamp - o.order_purchase_timestamp::timestamp)) AS delivery_time_days,
 	
 	-- Estimated delivery times (days)
-	EXTRACT(DAY FROM(order_estimated_delivery_date::timestamp - order_purchase_timestamp::timestamp)) AS estimated_time_days,
+	EXTRACT(DAY FROM(o.order_estimated_delivery_date::timestamp - o.order_purchase_timestamp::timestamp)) AS estimated_time_days,
 	
 	-- Delivery Performance Categorizagion('Earlier', 'Later', 'On Time', 'Pending/Cancelled')
 	CASE
 		WHEN o.order_delivered_customer_date IS NULL THEN 'Pending/Cancelled'
-		WHEN order_estimated_delivery_date::timestamp > order_delivered_customer_date::timestamp THEN 'Earlier'
-		WHEN order_estimated_delivery_date::timestamp < order_delivered_customer_date::timestamp THEN 'Later'
+		WHEN o.order_estimated_delivery_date::timestamp > o.order_delivered_customer_date::timestamp THEN 'Earlier'
+		WHEN o.order_estimated_delivery_date::timestamp < o.order_delivered_customer_date::timestamp THEN 'Later'
 		ELSE 'On Time'
 	END  AS delivery_performance,
 
 	-- Data Quality Flag Chronology Check(For logical-illogical date orders)
 	CASE
-		WHEN(order_purchase_timestamp > order_approved_at) THEN FALSE
-		WHEN(order_approved_at > order_delivered_carrier_date) THEN FALSE
-		WHEN(order_delivered_carrier_date > order_delivered_customer_date) THEN FALSE
+		WHEN(o.order_purchase_timestamp > o.order_approved_at) THEN FALSE
+		WHEN(o.order_approved_at > o.order_delivered_carrier_date) THEN FALSE
+		WHEN(o.order_delivered_carrier_date > o.order_delivered_customer_date) THEN FALSE
 		-- NEW RULE: If the status is 'delivered' but there is no date, this is also a chronological error/omission.
 		WHEN o.order_status = 'delivered' AND o.order_delivered_customer_date IS NULL THEN FALSE
 		WHEN o.order_status = 'canceled' AND o.order_delivered_customer_date IS NOT NULL THEN FALSE
 		ELSE TRUE
 	END AS is_valid_chronology
 	
-	FROM bronze.olist_orders o
-	LEFT JOIN silver.customers c ON o.customer_id = c.customer_id
+	FROM bronze.olist_orders AS o
+	LEFT JOIN silver.customers AS c ON o.customer_id = c.customer_id
 ON CONFLICT(order_id)
 DO UPDATE SET
 	order_status = EXCLUDED.order_status, -- An order was marked "Shipped" yesterday. Today it is marked "Delivered".

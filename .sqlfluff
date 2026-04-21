@@ -14,7 +14,8 @@ exclude_rules =
     layout.select_targets,
     capitalisation.keywords,
     layout.keyword_newline,
-    layout.cte_newline
+    layout.cte_newline,
+    structure.else_null
 
 [sqlfluff:indentation]
 tab_width = 4

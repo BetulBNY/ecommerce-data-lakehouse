@@ -7,7 +7,6 @@
 	-- And I will make names seem better (Like deleting "_" and INITCAP)
 	-- I will drop 3 rows which type is not_defined and payment_value is 0.
 
-SELECT * FROM bronze.olist_order_payments;
 
 INSERT INTO silver.order_payments (
 	order_id,

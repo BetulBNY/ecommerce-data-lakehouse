@@ -18,7 +18,7 @@ SELECT
         ((SUM(s.freight_value)::numeric / NULLIF(SUM(s.total_item_value), 0)) * 100)::numeric, 
     2) AS freight_impact_pct
 	FROM gold.dim_products p
-JOIN gold.fact_sales_items s
+INNER JOIN gold.fact_sales_items s
 	ON p.product_pk = s.product_pk
 GROUP BY p.category_name_en
 ORDER BY total_item_revenue DESC; -- En çok ciro getiren en üstte

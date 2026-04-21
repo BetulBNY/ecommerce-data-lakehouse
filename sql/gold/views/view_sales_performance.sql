@@ -19,10 +19,10 @@ WITH monthly_metrics AS (
         COUNT(DISTINCT f.order_id) AS total_orders,
         ROUND(SUM(f.price)::numeric, 2) AS total_revenue,
         ROUND(ROUND(SUM(f.price)::numeric, 2) / COUNT(DISTINCT f.order_id),2) AS avg_order_value -- Yani AVG fonksiyonu tekil ürün fiyatlarını değil, sepeti baz alır.
-    FROM gold.fact_sales_items f
-    JOIN gold.dim_date d 
+    FROM gold.fact_sales_items AS f
+    INNER JOIN gold.dim_date AS d 
 	ON f.order_date_key = d.date_id
-    GROUP BY 1, 2, 3
+    GROUP BY d.year, d.month, d.month_name
 )
 SELECT 
     *,
@@ -30,8 +30,8 @@ SELECT
     LAG(total_revenue) OVER (ORDER BY year, month) AS prev_month_revenue,
     -- Aylık büyüme yüzdesi (%)
     ROUND(
-        ((total_revenue - LAG(total_revenue) OVER (ORDER BY year, month)) / 
-        NULLIF(LAG(total_revenue) OVER (ORDER BY year, month), 0)) * 100, 
+        ((total_revenue - LAG(total_revenue) OVER (ORDER BY year, month))  
+        / NULLIF(LAG(total_revenue) OVER (ORDER BY year, month), 0)) * 100, 
     2) AS revenue_growth_pct
 FROM monthly_metrics
 ORDER BY year, month;

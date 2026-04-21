@@ -25,7 +25,7 @@ SELECT
 	-- FILTER yöntemi ile delay_rate_pct:
 	ROUND((COUNT(*) FILTER (WHERE f.is_late = TRUE)::numeric / NULLIF(COUNT(*), 0)) * 100, 2) AS delay_rate_pct
 FROM gold.fact_orders f
-JOIN gold.dim_customers c
+INNER JOIN gold.dim_customers c
 	ON f.customer_pk = c.customer_pk
 AND f.order_status = 'Delivered'  -- Sadece teslim edilmişleri analiz ediyoruz
 GROUP BY c.state

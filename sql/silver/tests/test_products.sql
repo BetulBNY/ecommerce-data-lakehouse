@@ -53,9 +53,3 @@ SELECT
         ELSE 0 
     END AS validation_status
 FROM test_results;
-
-
-
-
-
-

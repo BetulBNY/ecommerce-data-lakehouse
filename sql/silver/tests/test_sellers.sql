@@ -37,7 +37,7 @@ WITH test_results AS (
         -- Note: We only check where a match exists (inner join logic).
         (SELECT COUNT(*) 
          FROM silver.sellers s
-         JOIN silver.geolocation g ON s.zip_code_prefix = g.zip_code
+         INNER JOIN silver.geolocation g ON s.zip_code_prefix = g.zip_code
          WHERE s.city != g.city OR s.state != g.state
         ) AS count_sync_errors
 )

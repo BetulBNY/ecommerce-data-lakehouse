@@ -45,15 +45,15 @@ WITH test_results AS (
         -- TEST 6: Chronology vs Order Purchase (Expectation: 0) Shipping limit cannot be before the actual order date.
         (SELECT COUNT(*) 
          FROM silver.order_items oi
-         JOIN silver.orders o 
+         INNER JOIN silver.orders o 
 		 	ON oi.order_id = o.order_id
          WHERE oi.shipping_limit_date < o.purchase_timestamp
         ) AS count_chronology_errors
 )
 SELECT 
     CASE 
-        WHEN (count_duplicate_errors + count_fk_errors + count_calculation_errors + 
-              count_negative_errors + count_orphan_errors + count_chronology_errors) = 0 THEN 1
+        WHEN (count_duplicate_errors + count_fk_errors + count_calculation_errors 
+              + count_negative_errors + count_orphan_errors + count_chronology_errors) = 0 THEN 1
         ELSE 0 
     END AS validation_status
 FROM test_results;

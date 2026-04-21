@@ -40,8 +40,8 @@ WITH test_results AS (
 )
 SELECT 
     CASE 
-        WHEN (count_id_errors + count_mapping_errors + count_missed_flags + 
-              count_performance_errors + count_time_errors + count_status_errors) = 0 THEN 1
+        WHEN (count_id_errors + count_mapping_errors + count_missed_flags  
+              + count_performance_errors + count_time_errors + count_status_errors) = 0 THEN 1
         ELSE 0 
     END AS validation_status
 FROM test_results;

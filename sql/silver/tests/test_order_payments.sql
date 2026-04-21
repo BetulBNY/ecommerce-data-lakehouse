@@ -35,8 +35,8 @@ WITH test_results AS (
 )
 SELECT 
     CASE 
-        WHEN (count_duplicate_errors + count_negative_value_errors + 
-              count_negative_installment_errors + count_standardization_errors) = 0 THEN 1
+        WHEN (count_duplicate_errors + count_negative_value_errors  
+              + count_negative_installment_errors + count_standardization_errors) = 0 THEN 1
         ELSE 0 
     END AS validation_status
 FROM test_results;

@@ -53,7 +53,7 @@ SELECT
     review_score,
     INITCAP(TRIM(review_comment_title)) AS review_comment_title,
     TRIM(review_comment_message) AS review_comment_message, 
-    review_creation_date::timestamp AS review_creation_date::timestamp ,
+    review_creation_date::timestamp AS review_creation_date ,
     review_answer_timestamp::timestamp AS review_answer_timestamp 
 FROM ranked_reviews
 WHERE rn = 1 -- Just get latest one

@@ -76,10 +76,10 @@ def generate_daily_sales(num_orders=50):
             'review_answer_timestamp': (delivered_dt + timedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')
         })
     # I convert the data to a DataFrame and write it to the Bronze tables in 'APPEND' mode.    
-    pd.DataFrame(new_orders).to_sql('olist_orders', engine, schema='bronze', if_exists='append', index=False)
-    pd.DataFrame(new_items).to_sql('olist_order_items', engine, schema='bronze', if_exists='append', index=False)
-    pd.DataFrame(new_payments).to_sql('olist_order_payments', engine, schema='bronze', if_exists='append', index=False)
-    pd.DataFrame(new_reviews).to_sql('olist_order_reviews', engine, schema='bronze', if_exists='append', index=False)
+    pd.DataFrame(new_orders).to_sql('olist_orders', engine, schema='bronze', if_exists='replace', index=False)
+    pd.DataFrame(new_items).to_sql('olist_order_items', engine, schema='bronze', if_exists='replace', index=False)
+    pd.DataFrame(new_payments).to_sql('olist_order_payments', engine, schema='bronze', if_exists='replace', index=False)
+    pd.DataFrame(new_reviews).to_sql('olist_order_reviews', engine, schema='bronze', if_exists='replace', index=False)
 
     print(f"Successfully generated and appended {num_orders} orders with items, payments, and reviews.")
 

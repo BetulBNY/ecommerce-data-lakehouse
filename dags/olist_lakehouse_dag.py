@@ -55,10 +55,10 @@ with DAG(
     )
 
     # TASK 2: BRONZE INGESTION (Python) 
-    task_ingest_bronze = PythonOperator(
-        task_id='ingest_bronze_from_csv',
-        python_callable=ingest_bronze,   # scripts/ingest_bronze_olist.py içindeki fonksiyon
-    )
+    #task_ingest_bronze = PythonOperator(
+    #    task_id='ingest_bronze_from_csv',
+    #    python_callable=ingest_bronze,   # scripts/ingest_bronze_olist.py içindeki fonksiyon
+    #)
 
     # TASK 3: CREATING SCHEMAS (SQL) - Create Silver and Gold schemas
     task_create_schemas = PostgresOperator(
@@ -133,4 +133,5 @@ with DAG(
     # -------------------------------------------------------------------------
     # 3. DEPENDENCIES (Drawing the Arrows) # MAIN FLOW
     # -------------------------------------------------------------------------
-    task_generate_fake >>task_ingest_bronze >> task_create_schemas >> silver_group >> silver_testing_group >> gold_group >>gold_testing_group >> task_export_csv >> task_git_push
+    # task_generate_fake >>task_ingest_bronze >> task_create_schemas >> silver_group >> silver_testing_group >> gold_group >>gold_testing_group >> task_export_csv >> task_git_push
+    task_generate_fake >> task_create_schemas >> silver_group >> silver_testing_group >> gold_group >>gold_testing_group >> task_export_csv >> task_git_push

@@ -11,7 +11,7 @@ def ingest_bronze():
     print("--- Ingestion started ---")
     engine = get_engine()
 
-    # Önce schema varsa yarat, yoksa oluştur
+    # Önce schema yoksa oluştur
     with engine.begin() as conn:
         conn.execute(text("CREATE SCHEMA IF NOT EXISTS bronze"))
 

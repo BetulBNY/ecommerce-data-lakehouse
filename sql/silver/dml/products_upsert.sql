@@ -89,10 +89,10 @@ SELECT
     COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, gs.g_avg_h, 0) AS height_cm,
     COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, gs.g_avg_wi, 0) AS width_cm,
 
-    -- Volume Calculation (based on cleaned dimensions)
-    (COALESCE(NULLIF(p.product_length_cm, 0), cs.avg_l, gs.g_avg_l, 0) * 
-     COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, gs.g_avg_h, 0) * 
-     COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, gs.g_avg_wi, 0)) AS volume_cm3
+    -- Volume Calculation 
+    (COALESCE(NULLIF(p.product_length_cm, 0), cs.avg_l, gs.g_avg_l, 0)
+     * COALESCE(NULLIF(p.product_height_cm, 0), cs.avg_h, gs.g_avg_h, 0)
+     * COALESCE(NULLIF(p.product_width_cm, 0), cs.avg_wi, gs.g_avg_wi, 0)) AS volume_cm3
 
 FROM bronze.olist_products p
 CROSS JOIN global_stats gs -- IT connects general average to all rows
@@ -112,12 +112,3 @@ DO UPDATE SET
     width_cm = EXCLUDED.width_cm,
     volume_cm3 = EXCLUDED.volume_cm3,
     updated_at = CURRENT_TIMESTAMP;
-
-
-
-
-
-
-
-
-

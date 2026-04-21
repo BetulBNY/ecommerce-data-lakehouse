@@ -14,7 +14,7 @@
 INSERT INTO silver.category_translation (category_name_pt, category_name_en)
 SELECT 
 	product_category_name,
-	INITCAP(REPLACE(product_category_name_english, '_',' ')) AS category_name_en)
+	INITCAP(REPLACE(product_category_name_english, '_',' ')) AS category_name_en
 FROM bronze.olist_category_translation
 ON CONFLICT (category_name_pt)
 DO UPDATE SET 

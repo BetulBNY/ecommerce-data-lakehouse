@@ -51,8 +51,8 @@ SELECT
     review_id,
     order_id,
     review_score,
-    INITCAP(TRIM(review_comment_title)) AS review_comment_title, ,
-    TRIM(review_comment_message) AS review_comment_message, ,
+    INITCAP(TRIM(review_comment_title)) AS review_comment_title,
+    TRIM(review_comment_message) AS review_comment_message, 
     review_creation_date::timestamp AS review_creation_date::timestamp ,
     review_answer_timestamp::timestamp AS review_answer_timestamp 
 FROM ranked_reviews

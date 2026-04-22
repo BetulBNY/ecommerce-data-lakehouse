@@ -45,22 +45,6 @@ def load_data(query, filename):
     return pd.read_sql(query, engine)
 
 
-
-df_retention = pd.read_sql("""
-    WITH customer_orders AS (
-        SELECT customer_unique_id, COUNT(order_id) as order_count
-        FROM gold.dim_customers c
-        JOIN gold.fact_orders f ON c.customer_pk = f.customer_pk
-        GROUP BY 1
-    )
-    SELECT 
-        (COUNT(*) FILTER (WHERE order_count > 1)::numeric / COUNT(*)) * 100 as retention_rate
-    FROM customer_orders
-""", engine)
-
-retention_rate = float(df_retention['retention_rate'].iloc[0])
-
-
 df_sales = load_data("SELECT * FROM gold.view_sales_performance", "view_sales_performance.csv")
 df_logistics = load_data("SELECT * FROM gold.view_logistics_performance LIMIT 10", "view_logistics_performance.csv")
 df_cat = load_data("SELECT * FROM gold.view_category_insights", "view_category_insights.csv")
@@ -80,10 +64,25 @@ if summary_file:
     df_summary = pd.read_csv(summary_file)
     avg_review_score = float(df_summary['avg_review_score'].iloc[0])
     avg_delivery = float(df_summary['avg_delivery_days'].iloc[0])
+    retention_rate = float(df_summary['retention_rate'].iloc[0]) 
 else:
     # Hiçbir dosya bulunamadıysa (yani localdeysem ve CSV üretmediysem) DB'ye git
     avg_review_score = float(pd.read_sql("SELECT AVG(review_score) as val FROM gold.fact_orders", engine).iloc[0,0])
     avg_delivery = float(pd.read_sql("SELECT AVG(delivery_time_days) as val FROM gold.fact_orders WHERE order_status = 'Delivered'", engine).iloc[0,0])
+    df_retention = pd.read_sql("""
+        WITH customer_orders AS (
+            SELECT customer_unique_id, COUNT(order_id) as order_count
+            FROM gold.dim_customers c
+            JOIN gold.fact_orders f ON c.customer_pk = f.customer_pk
+            GROUP BY 1
+        )
+        SELECT 
+            (COUNT(*) FILTER (WHERE order_count > 1)::numeric / COUNT(*)) * 100 as retention_rate
+        FROM customer_orders
+    """, engine)
+
+    retention_rate = float(df_retention['retention_rate'].iloc[0])
+
 
 # latest_revenue = df_sales['total_revenue'].iloc[-1] # Monthly revenue is low because there is only 1 sale. Since September 2018 data is corrupted, showing "Total Revenue" is more reliable than "Last Month"
 total_revenue = df_sales['total_revenue'].sum()

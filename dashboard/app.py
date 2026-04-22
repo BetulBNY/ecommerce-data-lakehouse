@@ -30,7 +30,7 @@ st.markdown("---")
 
 # 2. Top Metrics (KPIs)
 st.subheader("Key Performance Indicators")
-col1, col2, col3, col4, col5 = st.columns(5)
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 # --- Data Reading Section ---
 # If we are running locally, read from the database. If we are in the cloud (where the dashboard will be deployed), read from the CSV files that Airflow exports. 
@@ -43,6 +43,23 @@ def load_data(query, filename):
     if os.path.exists(csv_path):
         return pd.read_csv(csv_path)
     return pd.read_sql(query, engine)
+
+
+
+df_retention = pd.read_sql("""
+    WITH customer_orders AS (
+        SELECT customer_unique_id, COUNT(order_id) as order_count
+        FROM gold.dim_customers c
+        JOIN gold.fact_orders f ON c.customer_pk = f.customer_pk
+        GROUP BY 1
+    )
+    SELECT 
+        (COUNT(*) FILTER (WHERE order_count > 1)::numeric / COUNT(*)) * 100 as retention_rate
+    FROM customer_orders
+""", engine)
+
+retention_rate = float(df_retention['retention_rate'].iloc[0])
+
 
 df_sales = load_data("SELECT * FROM gold.view_sales_performance", "view_sales_performance.csv")
 df_logistics = load_data("SELECT * FROM gold.view_logistics_performance LIMIT 10", "view_logistics_performance.csv")
@@ -78,6 +95,16 @@ col2.metric("Total Revenue", f"${total_revenue:,.2f}")
 col3.metric("Avg. Monthly Growth", f"{clean_growth:.2f}%")
 col4.metric("Avg. Review Score", f"{avg_review_score:.2f} / 5")
 col5.metric("Avg. Delivery Time (Days)", f"{avg_delivery:.2f}")
+
+
+col1.metric("Total Orders", f"{total_orders:,}")
+col2.metric("Total Revenue", f"${total_revenue:,.2f}")
+col3.metric("Avg. Order Value", f"${total_revenue/total_orders:,.2f}") # AOV düzeltildi
+col4.metric("Avg. Monthly Growth", f"{clean_growth:.2f}%")
+col5.metric("Retention Rate", f"{retention_rate:.2f}%") 
+col6.metric("Avg. Review Score", f"{avg_review_score:.2f} / 5")
+col7.metric("Avg. Delivery Time", f"{avg_delivery:.2f} Days")
+
 
 st.markdown("---")
 

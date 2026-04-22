@@ -1,6 +1,6 @@
 # E-Commerce Analytics Platform: End-to-End Data Pipeline
 
-[![Streamlit App](https://betul-ecommerce-dashboard.streamlit.app/)]
+**[View the Live Dashboard here!](https://betul-ecommerce-dashboard.streamlit.app/)**
 
 ## Project Overview
 This project is a fully containerized, autonomous Modern Data Platform that simulates an e-commerce environment. It leverages Docker for infrastructure portability and implements the Medallion Architecture (Bronze, Silver, Gold) within a PostgreSQL-based warehouse.
@@ -11,6 +11,19 @@ This project is a fully containerized, autonomous Modern Data Platform that simu
 > *   **Automated Sync:** A dedicated Git-Sync Bot captures daily analytical snapshots and pushes them directly to GitHub.
 > *   **Live Updates:** The Streamlit Cloud dashboard detects these updates instantly, providing real-time visibility into business KPIs without any manual intervention.
 The result is a production-grade data lifecycle that manages everything from raw ingestion and Data Quality validation to cloud-based visualization—entirely automated.
+
+---
+
+### **##  Tech Stack at a Glance**
+
+| Category | Technology |
+| :--- | :--- |
+| **Language** | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) ![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat&logo=postgresql&logoColor=white) |
+| **Storage & DB** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat&logo=postgresql&logoColor=white) |
+| **Orchestration** | ![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=flat&logo=Apache%20Airflow&logoColor=white) |
+| **Infrastructure** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) ![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=flat&logo=docker&logoColor=white) |
+| **Visualisation** | ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=Streamlit&logoColor=white) ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=flat&logo=Plotly&logoColor=white) |
+| **CI/CD & Tools** | ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=GitHub%20Actions&logoColor=white) ![SQLFluff](https://img.shields.io/badge/SQLFluff-grey?style=flat) ![Flake8](https://img.shields.io/badge/Flake8-grey?style=flat) |
 
 ---
 
@@ -43,11 +56,13 @@ Figure 1: High-level architectural overview illustrating the automated data flow
    - Optimized for BI tools and dashboarding (e.g., Streamlit).
    - Supports key business metrics such as revenue, order volume, and AOV.
    - Acts as the single source of truth for reporting.
+
 ![ER Diagram](img/er-diagram.jpg)
-Figure 3: Gold Layer Dimensional Model (Star Schema) optimized for efficient querying and BI dashboard performance.
+Figure 2: Gold Layer Dimensional Model (Star Schema) optimized for efficient querying and BI dashboard performance.
 
 ![Data Flow Diagram](img/data-flow-diagram.jpg)
-Figure 2: Data transformation across Medallion layers, from raw data to a structured star schema.
+Figure 3: Data transformation across Medallion layers, from raw data to a structured star schema.
+
 ---
 
 ## Tech Stack & Engineering Highlights
@@ -56,7 +71,9 @@ Figure 2: Data transformation across Medallion layers, from raw data to a struct
 ![Apache Airflow](img/airflow0.jpg)
 ![Apache Airflow](img/airflow1.jpg)
 ![Apache Airflow](img/airflow2.jpg)
-Figure 4: Apache Airflow DAG demonstrating the end-to-end task dependencies, from synthetic data generation to automated GitHub synchronization.
+
+<p align="center"><i>Figure 4: Apache Airflow DAG demonstrating the end-to-end task dependencies, from synthetic data generation to automated GitHub synchronization.</i></p>
+
 - **Database:** PostgreSQL 16 is used as the central ELT engine, where transformations are performed directly in-database to optimize performance and reduce data movement.
 - **Infrastructure:** Fully containerized with Docker & Docker Compose to ensuring seamless reproducibility and consistent environments across local development and production.
 - **Data Quality:** Implemented automated SQL-based data validation checks, including:

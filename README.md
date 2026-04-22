@@ -48,7 +48,7 @@ The project is designed using the **Medallion Architecture (Bronze, Silver, Gold
 2. **Silver (Cleansed & Enriched Layer):**
    - Applies data cleaning, standardization, and enrichment:
      - Address normalization
-     - Missing product attributes imputation
+     - Filling in missing product information
    - Instead of full refresh, implemented **incremental loading** using UPSERT logic to efficiently process only new and updated records.
    - Data is modeled using **Kimball principles** to prepare for analytics.
    - Chronological Validation: Implemented logical flags (e.g., is_valid_chronology) to detect system-level timestamp errors.
@@ -108,6 +108,34 @@ The frontend provides near real-time business insights based on Gold-layer:
 
 ---
 
+##  SQL Showcase & Analytical Insights
+
+This section demonstrates sample SQL queries executed within the **Gold Layer** to extract meaningful business insights. It showcases the use of **Advanced SQL** techniques such as Window Functions, Conditional Aggregation, and CTEs.
+
+### 1. Cumulative Revenue Analysis (Running Total)
+This query tracks the long-term financial growth by calculating the running total of revenue (Price + Freight). It provides a clear view of the platform's cash flow over its entire history.
+![Query](img/query1.jpg)
+
+### 2. Customer Retention & Loyalty Analysis
+How loyal are our customers? What percentage of them return for a second or third purchase?
+![Query](img/query2.jpg)
+
+#### **Business Insight:**
+*   **Finding:** Approximately **96.6%** of customers have only made a **single purchase**.
+*   **Observation:** The platform has a very high "One-Time Buyer" rate, indicating a potential struggle with customer retention.
+*   **Actionable Recommendation:** There is a significant opportunity to increase revenue by implementing **loyalty programs, personalized re-marketing campaigns**, or discount vouchers for second purchases to improve the Customer Lifetime Value (CLV).
+
+### 3. Seller Performance & Quality Scorecard
+Who are our top-selling but lowest-rated sellers? Which high-revenue partners might be putting customer satisfaction at risk?
+![Query](img/query3.jpg)
+
+#### **Business Insight:**
+*   **Finding:** We identified a group of high-volume sellers (50+ orders) who have consistently low customer ratings (average below 3.5).
+*   **Observation:** While these sellers contribute significantly to overall revenue, their poor customer satisfaction levels may be negatively impacting the platform’s long-term reputation.
+*   **Recommendation:** The Operations Team should review the top 5 sellers in this segment to understand the main causes of dissatisfaction such as product quality issues or ongoing delivery delays and take appropriate actions (e.g., warnings, process improvements) to protect overall marketplace quality.
+
+---
+
 ## How to Run Locally
 
 ### Prerequisites:
@@ -144,7 +172,7 @@ The frontend provides near real-time business insights based on Gold-layer:
 ---
 
 ## 🔮 Future Roadmap
-*   Migration of the Bronze layer to **S3/MinIO (Object Storage)** for true Lakehouse separation of storage and compute.
+*   Migration of the Bronze layer to **S3 (Object Storage)** for true Lakehouse separation of storage and compute.
 *   Implementation of **Apache Spark** for processing larger datasets (>100M rows).
 *   Adding **Slack/Email alerts** for Data Quality failures.
 

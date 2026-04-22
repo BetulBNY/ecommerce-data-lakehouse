@@ -4,17 +4,17 @@
 
 ## Project Overview
 This project is a fully containerized, autonomous Modern Data Platform that simulates an e-commerce environment. It leverages Docker for infrastructure portability and implements the Medallion Architecture (Bronze, Silver, Gold) within a PostgreSQL-based warehouse.
-🤖 The Autonomous Data Loop:
-> Unlike static datasets, this system is a living engine. It operates in a self-sustaining cycle:
-> *   **Synthetic Data Generation:** A custom Python/Faker simulator injects fresh sales data into the Bronze layer daily.
-> *   **Incremental ELT:** Apache Airflow orchestrates the transformation of these raw records into the Silver (cleansed) and Gold (analytical) layers using Upsert (ON CONFLICT) logic.
-> *   **Automated Sync:** A dedicated Git-Sync Bot captures daily analytical snapshots and pushes them directly to GitHub.
-> *   **Live Updates:** The Streamlit Cloud dashboard detects these updates instantly, providing real-time visibility into business KPIs without any manual intervention.
+**🤖 The Autonomous Data Loop:**
+Unlike static datasets, this system is a living engine. It operates in a self-sustaining cycle:
+   - **Synthetic Data Generation:** A custom Python/Faker simulator injects fresh sales data into the Bronze layer daily.
+   - **Incremental ELT:** Apache Airflow orchestrates the transformation of these raw records into the Silver (cleansed) and Gold (analytical) layers using Upsert (ON CONFLICT) logic.
+   - **Automated Sync:** A dedicated Git-Sync Bot captures daily analytical snapshots and pushes them directly to GitHub.
+   - **Live Updates:** The Streamlit Cloud dashboard detects these updates instantly, providing real-time visibility into business KPIs without any manual intervention.
 The result is a production-grade data lifecycle that manages everything from raw ingestion and Data Quality validation to cloud-based visualization—entirely automated.
 
 ---
 
-### **##  Tech Stack at a Glance**
+### **Tech Stack at a Glance**
 
 | Category | Technology |
 | :--- | :--- |
@@ -32,8 +32,8 @@ The result is a production-grade data lifecycle that manages everything from raw
 The project is designed using the **Medallion Architecture (Bronze, Silver, Gold)** to ensure scalable, maintainable, and analytics-ready data processing.
 
 ![Architecture Diagram](img/architecture.jpg)
-Figure 1: High-level architectural overview illustrating the automated data flow from ingestion to visualization, managed within a containerized Docker environment.
 
+<p align="center"><i>Figure 1: High-level architectural overview illustrating the automated data flow from ingestion to visualization, managed within a containerized Docker environment.</i></p>
 
 ### Data Layers:
 
@@ -58,10 +58,10 @@ Figure 1: High-level architectural overview illustrating the automated data flow
    - Acts as the single source of truth for reporting.
 
 ![ER Diagram](img/er-diagram.jpg)
-Figure 2: Gold Layer Dimensional Model (Star Schema) optimized for efficient querying and BI dashboard performance.
+<p align="center"><i>Figure 2: Gold Layer Dimensional Model (Star Schema) optimized for efficient querying and BI dashboard performance.</i></p>
 
 ![Data Flow Diagram](img/data-flow-diagram.jpg)
-Figure 3: Data transformation across Medallion layers, from raw data to a structured star schema.
+<p align="center"><i>Figure 3: Data transformation across Medallion layers, from raw data to a structured star schema.</i></p>
 
 ---
 

@@ -29,7 +29,8 @@ def export_to_csv():
     # These are single-row values, so I can gather them all in a 'summary.csv' file. This file will contain the average review score and the average delivery days, which are key metrics for my dashboard(BNY).
     summary_data = {
         "avg_review_score": pd.read_sql("SELECT AVG(review_score) as val FROM gold.fact_orders", engine).iloc[0,0],
-        "avg_delivery_days": pd.read_sql("SELECT AVG(delivery_time_days) as val FROM gold.fact_orders WHERE order_status = 'Delivered'", engine).iloc[0,0]
+        "avg_delivery_days": pd.read_sql("SELECT AVG(delivery_time_days) as val FROM gold.fact_orders WHERE order_status = 'Delivered'", engine).iloc[0,0],
+        "retention_rate": pd.read_sql("...(yukarıdaki sorgu)...", engine).iloc[0,0]
     }
     pd.DataFrame([summary_data]).to_csv(f"{output_dir}/summary_metrics.csv", index=False)
     # 3. Save Map Data (Customer Locations)
@@ -37,7 +38,7 @@ def export_to_csv():
         SELECT latitude, longitude 
         FROM gold.dim_customers 
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL 
-        ORDER BY RANDOM()  
+        ORDER BY RANDOM()   
         LIMIT 10000
     """
     df_map = pd.read_sql(map_query, engine)

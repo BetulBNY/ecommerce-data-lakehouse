@@ -4,6 +4,7 @@
 
 ## Project Overview
 This project is a fully containerized, autonomous Modern Data Platform that simulates an e-commerce environment. It leverages Docker for infrastructure portability and implements the Medallion Architecture (Bronze, Silver, Gold) within a PostgreSQL-based warehouse.
+
 **🤖 The Autonomous Data Loop:**
 Unlike static datasets, this system is a living engine. It operates in a self-sustaining cycle:
    - **Synthetic Data Generation:** A custom Python/Faker simulator injects fresh sales data into the Bronze layer daily.

@@ -171,7 +171,7 @@ Who are our top-selling but lowest-rated sellers? Which high-revenue partners mi
 
 ---
 
-## 🔮 Future Roadmap
+## Future Roadmap
 *   Migration of the Bronze layer to **S3 (Object Storage)** for true Lakehouse separation of storage and compute.
 *   Implementation of **Apache Spark** for processing larger datasets (>100M rows).
 *   Adding **Slack/Email alerts** for Data Quality failures.

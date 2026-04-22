@@ -30,8 +30,7 @@ st.markdown("---")
 
 # 2. Top Metrics (KPIs)
 st.subheader("Key Performance Indicators")
-col1, col2, col3, col4 = st.columns(4)
-col5, col6, col7 = st.columns(3)
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
 # --- Data Reading Section ---
 # If we are running locally, read from the database. If we are in the cloud (where the dashboard will be deployed), read from the CSV files that Airflow exports. 
@@ -94,7 +93,7 @@ col1.metric("Total Orders", f"{total_orders:,}")
 col2.metric("Total Revenue", f"${total_revenue:,.2f}")
 col3.metric("Avg. Order Value", f"${total_revenue/total_orders:,.2f}") 
 col4.metric("Avg. Monthly Growth", f"{clean_growth:.2f}%")
-col5.metric("Retention Rate", f"{retention_rate:.2f}%") 
+col5.metric("Customer Retention Rate", f"{retention_rate:.2f}%") 
 col6.metric("Avg. Review Score", f"{avg_review_score:.2f} / 5")
 col7.metric("Avg. Delivery Time", f"{avg_delivery:.2f} Days")
 

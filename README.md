@@ -6,11 +6,13 @@
 This project is a fully containerized, autonomous Modern Data Platform that simulates an e-commerce environment. It leverages Docker for infrastructure portability and implements the Medallion Architecture (Bronze, Silver, Gold) within a PostgreSQL-based warehouse.
 
 **🤖 The Autonomous Data Loop:**
+
 Unlike static datasets, this system is a living engine. It operates in a self-sustaining cycle:
    - **Synthetic Data Generation:** A custom Python/Faker simulator injects fresh sales data into the Bronze layer daily.
    - **Incremental ELT:** Apache Airflow orchestrates the transformation of these raw records into the Silver (cleansed) and Gold (analytical) layers using Upsert (ON CONFLICT) logic.
    - **Automated Sync:** A dedicated Git-Sync Bot captures daily analytical snapshots and pushes them directly to GitHub.
    - **Live Updates:** The Streamlit Cloud dashboard detects these updates instantly, providing real-time visibility into business KPIs without any manual intervention.
+
 The result is a production-grade data lifecycle that manages everything from raw ingestion and Data Quality validation to cloud-based visualization—entirely automated.
 
 ---

@@ -1,6 +1,3 @@
-# End-to-End Modern Data Warehouse & Analytics Pipeline
-(Subtitle: Leveraging Medallion Architecture and Kimball Modeling)
-
 # E-Commerce Analytics Platform: End-to-End Data Pipeline
 
 [![Streamlit App](https://betul-ecommerce-dashboard.streamlit.app/)]

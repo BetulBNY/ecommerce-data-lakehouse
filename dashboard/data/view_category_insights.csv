@@ -1,41 +1,41 @@
 category_name_en,total_item_revenue,total_freight_revenue,freight_impact_pct
-Health Beauty,1273575.77,184075.49,12.63
-Watches Gifts,1213521.93,101340.23,7.71
-Bed Bath Table,1055119.04,206671.13,16.38
+Health Beauty,1274133.49,184143.26,12.63
+Watches Gifts,1214114.2,101360.31,7.71
+Bed Bath Table,1056339.81,206803.33,16.37
 Sports Leisure,1000857.38,170193.9,14.53
-Computers Accessories,923183.38,148430.11,13.85
-Furniture Decor,743878.51,174292.84,18.98
-Housewares,644360.25,147393.67,18.62
-Cool Stuff,638701.03,84527.88,11.69
-Auto,604144.02,93801.04,13.44
-Toys,490107.12,78188.49,13.76
-Garden Tools,488938.21,99422.59,16.9
-Baby,416982.84,69034.36,14.2
-Perfumery,406161.45,54837.36,11.9
-Telephony,329175.93,71680.78,17.88
-Office Furniture,276451.38,68844.86,19.94
-Stationery,236715.55,47311.28,16.66
+Computers Accessories,923814.0,148500.49,13.85
+Furniture Decor,744297.85,174322.67,18.98
+Housewares,644784.49,147525.72,18.62
+Cool Stuff,638803.16,84533.96,11.69
+Auto,605262.24,93916.58,13.43
+Toys,490735.54,78292.23,13.76
+Garden Tools,489245.53,99439.75,16.89
+Baby,417314.29,69051.03,14.2
+Perfumery,406586.17,54875.57,11.89
+Telephony,330004.62,71722.19,17.85
+Office Furniture,276791.61,68886.69,19.93
+Stationery,237402.87,47389.24,16.64
 Computers,222963.13,9836.3,4.23
-Pet Shop,217001.89,40024.01,15.57
-Musical Instruments,193143.45,18880.84,8.91
+Pet Shop,217134.6,40062.56,15.58
+Musical Instruments,193286.19,18928.28,8.92
 Small Appliances,191583.34,16055.07,7.73
-Uncategorized,183178.52,28456.0,13.45
-Electronics,163613.62,46983.6,22.31
+Uncategorized,183329.49,28497.28,13.45
+Electronics,164798.69,47088.38,22.22
 Consoles Games,158860.26,19973.74,11.17
-Fashion Bags Accessories,157066.17,31890.72,16.88
-Construction Tools Construction,146461.12,20718.84,12.39
+Fashion Bags Accessories,157428.15,31927.43,16.86
+Construction Tools Construction,147071.72,20749.44,12.36
 Luggage Accessories,140461.23,30491.83,17.84
 Home Appliances 2,114273.57,10674.45,8.54
-Home Construction,83626.9,13876.91,14.23
-Home Appliances,82029.62,14984.32,15.45
-Agro Industry And Commerce,72731.28,5868.42,7.47
-Furniture Living Room,69798.36,18093.28,20.59
+Home Construction,83804.65,13925.88,14.25
+Home Appliances,82498.59,15026.31,15.41
+Agro Industry And Commerce,72842.17,5895.37,7.49
+Furniture Living Room,69843.97,18122.17,20.6
 Fixed Telephony,60359.62,4758.66,7.31
 Home Confort,59883.38,8620.36,12.58
 Air Conditioning,56814.91,6949.06,10.9
 Audio,51144.62,5750.08,10.11
 Books General Interest,48961.08,9363.61,16.05
-Kitchen Dining Laundry Garden Furniture,47933.82,12085.3,20.14
+Kitchen Dining Laundry Garden Furniture,48307.46,12129.72,20.07
 Small Appliances Home Oven And Coffee,47701.67,2759.87,5.47
 Construction Tools Lights,41381.91,7630.63,15.57
 Construction Tools Safety,41020.39,3930.01,8.74
@@ -43,8 +43,8 @@ Industry Commerce And Business,39669.61,7884.68,16.58
 Food,29525.15,7316.15,19.86
 Market Place,28505.45,5486.99,16.14
 Costruction Tools Garden,26643.61,5404.95,16.86
+Art,24645.12,4109.73,14.29
 Fashion Shoes,24624.25,4989.38,16.85
-Art,24314.5,4080.03,14.37
 Drinks,22428.7,5741.25,20.38
 Signaling And Security,22280.23,6556.68,22.74
 Books Technical,20561.11,4485.43,17.91
@@ -57,7 +57,7 @@ Christmas Supplies,8800.82,3229.3,26.84
 Tablets Printing Image,7638.25,1254.87,14.11
 Cine Photo,7324.82,1299.77,15.07
 Dvds Blu Ray,6709.95,1350.28,16.75
-Music,6034.35,690.51,10.27
+Music,6517.43,737.06,10.16
 Books Imported,4886.61,786.85,13.87
 Party Supplies,4485.18,827.97,15.58
 Furniture Mattress And Upholstery,4368.08,1630.46,27.18
